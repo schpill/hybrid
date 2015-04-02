@@ -1,0 +1,55 @@
+﻿<ion-side-menus>
+    <ion-side-menu-content drag-content="false">
+        <ion-nav-bar class="bar bar-zelift">
+            <ion-nav-buttons side="left">
+                <button class="button button-clear button-icon icon ion-navicon" menu-toggle="left"></button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view name="main" animation="slide-left-right"></ion-nav-view>
+    </ion-side-menu-content>
+    <ion-side-menu side="left">
+        <ion-header-bar class="bar">
+            <h1 class="title"></h1>
+        </ion-header-bar>
+        <ion-content>
+            <ion-list>
+                <ion-item class="item item-icon-left" href="#/zelift/home" menu-close>
+                    <i class="icon fa fa-home fa-ionicon"></i>
+                    Accueil
+                </ion-item>
+                <ion-item class="item item-icon-left" href="#/zelift/search" menu-close>
+                    <i class="icon ion-ios-search fa-ionicon"></i>
+                    Rechercher un service
+                </ion-item>
+                <ion-item class="item item-icon-left" href="#/zelift/services" menu-close>
+                    <i class="icon ion-eye fa-ionicon"></i>
+                    Parcourir les services
+                </ion-item>
+                <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/home" menu-close>
+                    <i class="icon ion-person fa-ionicon"></i>
+                    Mon compte
+                </ion-item>
+                <ion-item class="item item-icon-left" ng-if="connected === false" ng-click="signup()" menu-close>
+                    <i class="icon fa fa-plus fa-ionicon"></i>
+                    S'inscrire
+                </ion-item>
+                <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/home" menu-close>
+                    <i class="icon ion-star fa-ionicon"></i>
+                    Mes services
+                </ion-item>
+                <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/home" menu-close>
+                    <i class="icon fa fa-cogs fa-ionicon"></i>
+                    Paramètres
+                </ion-item>
+                <ion-item class="item item-icon-left" href="#/zelift/map" menu-close>
+                    <i class="icon fa fa-globe fa-ionicon"></i>
+                    Carte
+                </ion-item>
+                <ion-item class="item item-icon-left" ng-click="go('zelift.home')" menu-close>
+                    <i class="icon ion-help-circled fa-ionicon"></i>
+                    &Agrave; propos
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-side-menu>
+</ion-side-menus>

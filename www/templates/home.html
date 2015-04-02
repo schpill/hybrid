@@ -1,0 +1,45 @@
+﻿<ion-view title="{{viewTitle}}">
+    <ion-nav-buttons side="right">
+        <!-- <a ng-click="shareAnywhere()" class="button button-clear icon ion-android-share-alt fa-2x" href="#"></a> -->
+        <a ng-if="connected === true" class="button button-clear icon ion-android-more-vertical" ng-click="popover.show($event)"></a>
+    </ion-nav-buttons>
+    <ion-content class="has-header padding">
+        <hgroup class="text-center padding-vertical">
+            <h2 class="title">ZeLift</h2>
+        </hgroup>
+        <div ng-if="connected === false">
+            <form name="form" ng-submit="doLogin(form)">
+                <div class="list">
+                    <label class="item item-input" ng-class="{'item-assertive': form.email.$touched && (form.email.$error.required || form.email.$error.email)}">
+                        <input type="email" name="email" placeholder="Courriel" ng-model="loginData.email" required>
+                    </label>
+                    <label class="item item-input" ng-class="{'item-assertive': form.pass.$touched && form.pass.$error.required}">
+                        <input type="password" name="pass" placeholder="Mot de passe" ng-model="loginData.password" required>
+                    </label>
+                    <button class="button button-full button-zelift" type="submit"><i class="fa fa-sign-in"></i> Connexion</button>
+                </div>
+            </form>
+    <!--         <button class="button button-full button-positive" >
+                <i class="fa fa-facebook" ng-click="fbLogin()"></i>
+            </button> -->
+            <button class="button button-full button-zelift" ng-click="signup()">
+                <i class="fa fa-edit"></i> Inscription
+            </button>
+        </div>
+        <div ng-if="connected === true">
+            <div>Latitude: {{user.latitude}}</div>
+            <div>Longitude: {{user.longitude}}</div>
+            <div>Sellzone: {{user.sellzone.name}}</div>
+            <ion-list>
+                <ion-item class="item item-icon-left" href="#/zelift/home">
+                    <i class="icon fa fa-list fa-ionicon zeliftColor"></i>
+                    Dernières commandes
+                </ion-item>
+                <ion-item class="item item-icon-left" href="#/zelift/home">
+                    <i class="icon fa fa-heart fa-ionicon zeliftColor"></i>
+                    Mes commerces
+                </ion-item>
+            </ion-list>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,32 @@
+{
+  "name": "ionic-rating",
+  "main": "ionic-rating.js",
+  "homepage": "https://github.com/fraserxu/ionic-rating",
+  "authors": [
+    "fraserxu <xvfeng123@gmail.com>"
+  ],
+  "description": "Star rating bar for ionic",
+  "keywords": [
+    "ionic",
+    "angularjs",
+    "rating",
+    "web"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "bfb3d5581b",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "bfb3d5581bc3c75fb2a665a81692e63664d8fd88"
+  },
+  "_source": "git://github.com/fraserxu/ionic-rating.git",
+  "_target": "master",
+  "_originalSource": "ionic-rating"
+}

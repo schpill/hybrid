@@ -1,0 +1,41 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h3 class="title">Inscription</h3>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeRegister()">Fermer</button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <form name="register" ng-submit="doSignup(register)">
+            <div class="list list-inset">
+                <label class="item item-radio">
+                    Vous êtes
+                    <ion-radio required ng-model="signupData.genre" ng-value="1">un homme</ion-radio>
+                    <ion-radio required ng-model="signupData.genre" ng-value="2">une femme</ion-radio>
+                </label>
+
+                <label class="item item-input item-large" ng-class="{'item-assertive': register.name.$touched && register.name.$error.required}">
+                    <input type="text" placeholder="Nom" name="name" ng-model="signupData.name" required>
+                </label>
+
+                <label class="item item-input item-large" ng-class="{'item-assertive': register.firstname.$touched && register.firstname.$error.required}">
+                    <input type="text" placeholder="Prénom" name="firstname" ng-model="signupData.firstname" required>
+                </label>
+
+                <label class="item item-input item-large" ng-class="{'item-assertive': register.email.$touched && (register.email.$error.required || register.email.$error.email)}">
+                    <input type="email" placeholder="Courriel" name="email" ng-model="signupData.email" required>
+                </label>
+
+                <label class="item item-input item-large" ng-class="{'item-assertive': register.password.$touched && register.password.$error.required}">
+                    <input type="password" placeholder="Mot de passe" ng-model="signupData.password" required ng-minlength="6">
+                </label>
+
+                <label class="item item-input item-large" ng-class="{'item-assertive': register.password2.$touched && register.password2.$error.required}">
+                    <input type="password" placeholder="Répéter le mot de passe" ng-model="signupData.password2" required ng-minlength="6">
+                </label>
+
+                <button class="button button-full button-zelift" type="submit">Valider</button>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

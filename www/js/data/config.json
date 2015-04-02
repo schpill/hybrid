@@ -1,0 +1,7 @@
+{
+    "development": {
+        "api": {
+            "url": "/api/mobile/data/"
+        }
+    }
+}

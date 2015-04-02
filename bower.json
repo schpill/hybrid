@@ -1,0 +1,10 @@
+{
+  "name": "zeliftApp",
+  "private": "true",
+  "dependencies": {
+    "jQuery": "~2.1.1",
+    "ionic-rating": "master",
+    "fontawesome": "~4.1.0",
+    "ionic": "driftyco/ionic-bower#1.0.0-beta.14"
+  }
+}
