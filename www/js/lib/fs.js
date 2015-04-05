@@ -26,7 +26,7 @@
                             console.log('no key');
                         });
                     }, function () {
-                        console.log('no getFile');
+                        console.log('no setFile');
                     });
                 }, failFS);
             });
@@ -49,7 +49,9 @@
                         cb(defaultVal);
                     });
                 }, function () {
-                    console.log('no getFile');
+                    console.log('no getFile ' + key.split('.').join('_') + '.key');
+                    console.log(defaultVal);
+                    cb(defaultVal);
                 });
             }, failFS);
         };
@@ -60,7 +62,7 @@
                     entry.remove();
                     console.log('delete ' + key);
                 }, function () {
-                    console.log('no getFile');
+                    console.log('no delFile');
                 });
             }, failFS);
         };
@@ -72,8 +74,28 @@
                     console.log('delete ' + key);
                     cb(key, value);
                 }, function () {
-                    console.log('no getFile');
+                    console.log('no delWriteFile');
                     cb(key, value);
+                });
+            }, failFS);
+        };
+
+        self.removeRemember = function () {
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+                var directoryReader = fileSystem.root.createReader();
+                directoryReader.readEntries(function (entries) {
+                    var i;
+
+                    for (i = 0; i < entries.length; i++) {
+                        var entry = entries[i];
+
+                        if (entry.name.match('remember_')) {
+                            entry.remove();
+                            console.log('delete ' + entry.name);
+                        }
+                    }
+                }, function () {
+                    console.log('no directoryReader');
                 });
             }, failFS);
         };

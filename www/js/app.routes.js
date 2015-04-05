@@ -72,6 +72,18 @@
                 }
             });
 
+            //**  offreout
+            $stateProvider.state('zelift.offreout', {
+                url: '/offreout',
+                cache: false,
+                views: {
+                    'main': {
+                        templateUrl: 'templates/offreout.html',
+                        controller: 'offreout'
+                    }
+                }
+            });
+
             //**  map
             $stateProvider.state('zelift.map', {
                 url: '/map',

@@ -1,0 +1,38 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h3 class="title"><i class="fa fa-map-marker zeliftColor"></i> Ajouter une adresse</h3>
+        <div class="buttons">
+            <button class="button button-zelift" ng-click="closeAddAddress()">Annuler</button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <form name="addaddress" ng-submit="doAddAddress(addaddress)">
+            <div class="list list-inset">
+                <label class="item item-input item-large" ng-class="{'item-assertive': addaddress.name.$touched && addaddress.name.$error.required}">
+                    <input type="text" placeholder="Nommer cette adresse" name="name" ng-model="addaddressData.name" required>
+                </label>
+
+                <label class="item item-input item-large" ng-class="{'item-assertive': addaddress.receipt_name.$touched && addaddress.receipt_name.$error.required}">
+                    <input type="text" placeholder="Nom et prénom du destinataire" name="receipt_name" ng-model="addaddressData.receipt_name" required>
+                </label>
+
+                <label class="item item-textarea item-large" ng-class="{'item-assertive': addaddress.address.$touched && addaddress.address.$error.required}">
+                    <textarea placeholder="Adresse" name="address" ng-model="addaddressData.address" required />
+                </label>
+
+                <label class="item item-input item-large" ng-class="{'item-assertive': addaddress.city.$touched && addaddress.city.$error.required}">
+                    <input type="text" placeholder="Ville" name="city" ng-model="addaddressData.city" required>
+                </label>
+
+                <label class="item item-input item-large" ng-class="{'item-assertive': addaddress.zip.$touched && addaddress.zip.$error.required}">
+                    <input ng-max-length="5" type="tel" placeholder="Code postal" name="zip" ng-model="addaddressData.zip" required>
+                </label>
+
+                <label class="item item-input item-large" ng-class="{'item-assertive': addaddress.country.$touched && addaddress.country.$error.required}">
+                    <input type="text" placeholder="Pays" name="country" ng-model="addaddressData.country" required>
+                </label>
+                <button class="button button-full button-zelift" type="submit"><i class="fa fa-plus"></i> Ajouter</button>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

@@ -1,0 +1,30 @@
+<ion-view title="Récapitulatif">
+    <ion-nav-buttons side="left">
+        <a ng-click="goBack()" class="button button-clear icon fa fa-arrow-circle-left pull-left fa-2x zeliftColor" href="#"></a>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <a ng-if="connected === true" class="button button-clear icon ion-android-more-vertical" ng-click="popover.show($event)"></a>
+    </ion-nav-buttons>
+    <ion-content class="has-header padding">
+        <h3 class="zeliftColor up bold">{{offersData.title}}</h3>
+        <ion-list>
+            <div class="item item-text-wrap" ng-repeat="item in offersData.offers">
+                <span class="bold">{{item.company.name}}</span>
+                <br>
+                <br>
+                <div>
+                    <span class="price">{{item.amount}} €</span>  Durée {{duration(item.duration_hms)}}
+                    <span class="pull-right">
+                        <i class="fa fa-calendar"></i> {{item.start_hms}}
+                    </span>
+                </div>
+                <div class="pull-right">
+                    <div class="badge small until"><i class="icon ion-clock"></i> Valide jusqu'à {{hour(item.date_max_offer_hms)}}</div>
+                </div>
+                <br>
+                <a ng-click="" class="pull-right bar-zelift cartButton"><i class="fa fa-shopping-cart"></i> Commander</a>
+                <br>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-view>

@@ -1,49 +1,110 @@
-<ion-view title="{{viewTitle}}">
+<ion-view title="Formulaire">
     <ion-nav-buttons side="left">
         <a ng-click="goBack()" class="button button-clear icon fa fa-arrow-circle-left pull-left fa-2x zeliftColor" href="#"></a>
     </ion-nav-buttons>
+
     <ion-nav-buttons side="right">
         <a ng-if="connected === true" class="button button-clear icon ion-android-more-vertical" ng-click="popover.show($event)"></a>
     </ion-nav-buttons>
+
     <ion-content class="has-header padding">
+        <h3 class="zeliftColor up bold">{{viewTitle}}</h3>
         <form name="form" ng-submit="doOffreIn(form)">
             <div ng-if="showQuantity">
-                <h3>{{offreinform.quantity.label}}</h3>
-                <div class="row">
-                    <select name="quantity" ng-model="dataOffreinform.quantity" ng-if="offreinform.quantity.type == 'min_max'">
+                <h3 ng-if="offreinform.quantity.type != 'min_max' && offreinform.quantity.type != 'list_one'">{{offreinform.quantity.label}}</h3>
+                <label class="item item-input item-select" ng-if="offreinform.quantity.type == 'min_max'">
+                    <div class="input-label">
+                        <h3>{{offreinform.quantity.label}}</h3>
+                    </div>
+                    <select required  ng-class="{'item-assertive': form.quantity.$error.required}" name="quantity" ng-model="dataOffreinform.quantity" ng-if="offreinform.quantity.type == 'min_max'">
                         <option ng-repeat="v in offreinform.min_max_values" value="{{v.id}}">{{v.value}}</option>
                     </select>
-                    <select name="quantity" ng-model="dataOffreinform.quantity" ng-if="offreinform.quantity.type == 'multiple'">
-                        <option ng-repeat="v in offreinform.multiple_values" value="{{v.id}}">{{v.value}}</option>
+                    <br>
+                </label>
+
+                <label class="item item-input item-select" ng-if="offreinform.quantity.type == 'list_one'">
+                    <div class="input-label">
+                        <h4>{{offreinform.quantity.label}}</h4>
+                    </div>
+                    <select required  ng-class="{'item-assertive': form.quantity.$error.required}" name="quantity" ng-model="dataOffreinform.quantity" ng-if="offreinform.quantity.type == 'list_one'">
+                        <option ng-repeat="v in offreinform.list_values" value="{{v.id}}">{{v.value}}</option>
                     </select>
-                    <input type="number" ng-min="offreinform.quantity.min" ng-max="offreinform.quantity.max" name="quantity" ng-model="dataOffreinform.quantity" ng-if="offreinform.quantity.type == 'int'" />
+                    <br>
+                </label>
+
+                <input ng-class="{'item-assertive': form.quantity.$touched && form.quantity.$error.required}" type="number" ng-min="offreinform.quantity.min" ng-max="offreinform.quantity.max" name="quantity" ng-model="dataOffreinform.quantity" ng-if="offreinform.quantity.type == 'int'" />
+
+                <div ng-if="offreinform.quantity.type == 'multiple'">
+                    <div ng-repeat="v in offreinform.multiple_values">
+                        <h4>{{v.value}}</h4>
+                        <input type="number" name="quantity_{{v.id}}" ng-model="dataOffreinform['quantity_' + v.id]" />
+                    </div>
                 </div>
             </div>
-            <div ng-if="offreinform.is_calendar == 1">
-                <h3>&Agrave; quel moment ?</h3>
+
+            <div class="has-header padding" ng-if="offreinform.quantity.opts.price.length > 0">
+                <h3 class="zeliftColor" style="border-bottom: solid 1px;">Options</h3>
+                <div ng-repeat="o in offreinform.quantity.opts.price">
+                    <h4>{{o.content.label}}</h4>
+                    <label class="toggle toggle-zelift">
+                        <input ng-model="dataOffreinform['option_price_' + o.name]" type="checkbox">
+                        <div class="track">
+                            <div class="handle"></div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="has-header padding" ng-if="offreinform.is_calendar == 1">
+                <h3><i class="fa fa-calendar zeliftColor"></i> Quand ?</h3>
                 <div class="row">
                     <div class="col">Date</div>
                     <div class="col">Heure</div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <input name="date" ng-model="dataOffreinform.date" type="date" min="{{offreinform.min_date}}" max="{{offreinform.max_date}}">
+                        <input required name="date" ng-model="dataOffreinform.date" type="date" min="{{offreinform.min_date}}" max="{{offreinform.max_date}}" ng-class="{'item-assertive': form.date.$error.required}">
                     </div>
                     <div class="col">
-                        <input class="zeliftColor" name="time" ng-model="dataOffreinform.time" min="00:00" max="23:59" type="time" step="900">
+                        <input required class="zeliftColor" name="time" ng-model="dataOffreinform.time" type="time" step="900" ng-class="{'item-assertive': form.time.$touched && form.time.$error.required}">
                     </div>
                 </div>
             </div>
-            <div ng-if="offreinform.at_home == 1">
-                <h3>&Agrave; quelle adresse ?</h3>
+
+            <div class="has-header padding" ng-if="offreinform.at_home == 1">
+                <h3><i class="fa fa-map-marker zeliftColor"></i> Où ?</h3>
+                <label class="item item-input item-select" ng-if="addresses.length > 0">
+                    <div style="font-size: 80%;" class="input-label">
+                        Vos adresses
+                    </div>
+                    <select style="font-size: 66%;" name="address_id" ng-model="dataOffreinform.address_id">
+                        <option ng-repeat="a in addresses" value="{{a.id}}">{{a.content}}</option>
+                    </select>
+                </label>
+                <br><span ng-click="addAddress()" class="zeliftColorBox spanBox has-header"><i class="fa fa-plus"></i> Ajouter une adresse</span>
             </div>
-            <div ng-if="offreinform.language == 1">
-                <h3>Souhaitez-vous que le prestataire parle une autre langue ?</h3>
-                <select name="langue" ng-model="dataOffreinform.langue">
-                    <option value="non" selected>Non</option>
-                    <option ng-repeat="l in offreinform.languages" value="{{l}}">{{l}}</option>
-                </select>
+
+            <div class="has-header padding" ng-if="offreinform.distance_max == 1">
+                <h3><i class="fa fa-map-marker zeliftColor"></i> &Agrave; quelle distance maximale ?</h3>
+                <div class="item range range-positive">
+                    <input class="zeliftColor" type="range" name="distance_max" ng-model="dataOffreinform.distance_max" min="0" max="200" value="0">
+                    {{dataOffreinform.distance}} km
+                </div>
             </div>
+
+            <div class="has-header padding" ng-if="offreinform.language == 1">
+                <h3><i class="fa fa-flag zeliftColor"></i> Souhaitez-vous que le prestataire parle une langue étrangère ?</h3>
+                <label class="item item-input item-select">
+                    <div style="font-size: 80%;" class="input-minlabel">
+                        Si oui, choisir une langue
+                    </div>
+                    <select name="langue" ng-model="dataOffreinform.langue">
+                        <option value="non" selected>Non</option>
+                        <option ng-repeat="l in offreinform.languages" value="{{l}}">{{l}}</option>
+                    </select>
+                </label>
+            </div>
+
             <button class="button button-full button-zelift" type="submit"><i class="fa fa-chevron-circle-right"></i> Trouver des prestataires <i class="fa fa-chevron-circle-left"></i></button>
         </form>
     </ion-content>

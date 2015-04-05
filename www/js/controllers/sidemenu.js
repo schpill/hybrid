@@ -21,8 +21,11 @@
             $scope.user = {};
         }
 
+        $scope.platformReady = false;
+
         if (window.cordova) {
             $ionicPlatform.ready(function () {
+                $scope.platformReady    = true;
                 $scope.user.model       = $cordovaDevice.getModel();
                 $scope.user.platform    = $cordovaDevice.getPlatform();
                 $scope.user.uuid        = $cordovaDevice.getUUID();
@@ -38,81 +41,6 @@
                     console.error(err);
                 });
 
-                $scope.zeStore = function () {
-                    var self = this;
-
-                    self.set = function (key, value) {
-                        var q = "DELETE FROM zecache WHERE keycache = '" + key + "'";
-
-                        $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                            console.log('OK delete');
-                        }, function (err) {
-                            console.error(err.message);
-                        });
-
-                        var q = "INSERT INTO zecache (keycache, valuecache, expirecache) VALUES ('" + key + "', '" + JSON.stringify(value) + "', '0')";
-
-                        $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                            console.log('OK insert');
-                        }, function (err) {
-                            console.error(err.message);
-                        });
-
-                        return self;
-                    }
-
-                    self.get = function (key, cb, defaultVal) {
-                        if (typeof(defaultVal) == 'undefined') {
-                            defaultVal = null;
-                        }
-
-                        var q = "SELECT valuecache FROM zecache WHERE keycache = '" + key + "'";
-
-                        $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                            var ret;
-
-                            if (res.rows.length == 0) {
-                                ret = defaultVal;
-                            } else {
-                                var seg = res.rows.item(0);
-                                ret = JSON.parse(seg.valuecache);
-                            }
-
-                            cb(ret);
-                        }, function (err) {
-                            console.error(err.message);
-                        });
-                    };
-
-                    self.has = function (key, cb) {
-
-                        var q = "SELECT valuecache FROM zecache WHERE keycache = '" + key + "'";
-
-                        $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                            if (res.rows.length == 0) {
-                                cb(false);
-                            } else {
-                                cb(true);
-                            }
-                        }, function (err) {
-                            console.error(err.message);
-                        });
-                    };
-
-                    self.delete = function(key, cb) {
-                        var q = "DELETE FROM zecache WHERE keycache = '" + key + "'";
-
-                        $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                            console.log('OK delete');
-                            cb();
-                        }, function (err) {
-                            console.error(err.message);
-                        });
-                    };
-
-                    return self;
-                };
-
                 // var fsys = fs.init();
 
                 // fsys.set('c.l', 'test cache');
@@ -126,9 +54,192 @@
                 // $scope.zeStore().get('trucs', function (res) {
                 //     console.log(res[0]);
                 // }, 25);
-
             });
         }
+
+        $scope.addSlashes = function(str) {
+            return str.split("'").join("''");
+        };
+
+        $scope.zeStore = function () {
+            var self = this;
+
+            self.set = function (key, value) {
+                var q = "DELETE FROM zecache WHERE keycache = '" + key + "'";
+
+                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
+                    console.log('OK delete');
+                }, function (err) {
+                    console.error(err.message);
+                });
+
+                var q = "INSERT INTO zecache (keycache, valuecache, expirecache) VALUES ('" + key + "', '" + $scope.addSlashes(JSON.stringify(value)) + "', '0')";
+
+                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
+                    console.log('OK insert');
+                }, function (err) {
+                    console.error(err.message);
+                });
+
+                return self;
+            }
+
+            self.get = function (key, cb, defaultVal) {
+                if (typeof(defaultVal) == 'undefined') {
+                    defaultVal = null;
+                }
+
+                var q = "SELECT valuecache FROM zecache WHERE keycache = '" + key + "'";
+
+                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
+                    var ret;
+
+                    if (res.rows.length == 0) {
+                        ret = defaultVal;
+                    } else {
+                        var seg = res.rows.item(0);
+                        ret = JSON.parse(seg.valuecache);
+                    }
+
+                    cb(ret);
+                }, function (err) {
+                    console.error(err.message);
+                });
+            };
+
+            self.has = function (key, cb) {
+                var q = "SELECT valuecache FROM zecache WHERE keycache = '" + key + "'";
+
+                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
+                    if (res.rows.length == 0) {
+                        cb(false);
+                    } else {
+                        cb(true);
+                    }
+                }, function (err) {
+                    console.error(err.message);
+                });
+            };
+
+            self.delete = function(key, cb) {
+                var q = "DELETE FROM zecache WHERE keycache = '" + key + "'";
+
+                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
+                    console.log('OK delete');
+                    cb();
+                }, function (err) {
+                    console.error(err.message);
+                });
+            };
+
+            self.removeRemember = function(key) {
+                var q = "DELETE FROM zecache WHERE keycache LIKE 'remember.%'";
+
+                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
+                    console.log('OK delete remember');
+                }, function (err) {
+                    console.error(err.message);
+                });
+            };
+
+            return self;
+        };
+
+        $scope.addRemember = function (name, valueKey) {
+            if ($scope.platformReady) {
+                console.log('add ' + name);
+                var fsys = $scope.zeStore();
+                fsys.set('remember.' + name, valueKey);
+            } else {
+                $timeout(function() {
+                    var fsys = $scope.zeStore();
+                    fsys.set('remember.' + name, valueKey);
+                }, 500);
+            }
+        };
+
+        $scope.delRemember = function (name) {
+            if ($scope.platformReady) {
+                console.log('del ' + name);
+                var fsys = $scope.zeStore();
+                fsys.del('remember.' + name);
+            } else {
+                $timeout(function() {
+                    var fsys = $scope.zeStore();
+                    fsys.del('remember.' + name);
+                }, 500);
+            }
+        };
+
+        $scope.remember = function (name, cb1, cb2) {
+            if ($scope.platformReady) {
+                var fsys = $scope.zeStore();
+
+                fsys.get('remember.' + name, function (data) {
+                    if (data == 'dummy') {
+                        cb1();
+                    } else {
+                        cb2(data);
+                    }
+                }, 'dummy');
+            } else {
+                $timeout(function() {
+                    var fsys = $scope.zeStore();
+
+                    fsys.get('remember.' + name, function (data) {
+                        if (data == 'dummy') {
+                            cb1();
+                        } else {
+                            cb2(data);
+                        }
+                    }, 'dummy');
+                }, 500);
+            }
+        };
+
+        $scope.getRemember = function (name, cb, defaultVal) {
+            var fsys = $scope.zeStore();
+
+            if (typeof(defaultVal) == 'undefined') {
+                defaultVal = null;
+            }
+
+            fsys.get('remember.' + name, function (data) {
+                cb(data);
+            }, defaultVal);
+        };
+
+        $scope.clearCache = function () {
+            if ($scope.platformReady) {
+                var fsys = $scope.zeStore();
+
+                fsys.removeRemember();
+
+                $ionicPopup.alert({
+                    title: '<i class="fa fa-check-square-o fa-3x zeliftColor"><i>',
+                    template: 'Cache vidé',
+                    buttons: [{
+                        text: 'OK',
+                        type: 'button button-full button-zelift'
+                    }]
+                });
+            } else {
+                $timeout(function() {
+                    var fsys = $scope.zeStore();
+
+                    fsys.removeRemember();
+
+                    $ionicPopup.alert({
+                        title: '<i class="fa fa-check-square-o fa-3x zeliftColor"><i>',
+                        template: 'Cache vidé',
+                        buttons: [{
+                            text: 'OK',
+                            type: 'button button-full button-zelift'
+                        }]
+                    });
+                }, 500);
+            }
+        };
 
         $scope.loc = function () {
             if (!$scope.isDev) {
@@ -247,7 +358,6 @@
                         case 200:
                             $scope.user = data.user;
                             $scope.user.token = data.token;
-                            console.log($scope.user.sellzone_id);
 
                             localStorage.setItem('user', angular.toJson($scope.user));
                             localStorage.setItem('email', $scope.user.email);
@@ -371,9 +481,16 @@
         };
 
         $scope.findSellzone = function () {
-            $scope.findDb('sellzone', $scope.user.sellzone_id, function (res) {
-                $scope.user.sellzone = res;
-            });
+            if ($scope.connected) {
+                $scope.remember('sz', function () {
+                    $scope.findDb('sellzone', $scope.user.sellzone_id, function (res) {
+                        $scope.user.sellzone = res;
+                        $scope.addRemember('sz', res);
+                    });
+                }, function (res) {
+                    $scope.user.sellzone = res;
+                });
+            }
         };
 
         $scope.findDb = function (table_row, id_row, cb) {
@@ -406,7 +523,6 @@
             scope: $scope,
         }).then(function(popover) {
             $scope.popover = popover;
-            $scope.findSellzone();
         });
 
         $scope.goBack = function () {

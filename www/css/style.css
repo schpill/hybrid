@@ -200,11 +200,60 @@
     font-family: 'Raleway';
 }
 
+.up {
+    text-transform:uppercase;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.small {
+    font-size: 66%;
+}
+
+.badge, .spanBox {
+    padding: 4px;
+    border: solid 1px;
+    border-radius: 4px;
+}
+
+.zeliftColorBox {
+    color: #6E358B;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 .zeliftColor {
     color: #6E358B;
 }
+
 .bar-zelift {
     background-color: #6E358B;
+    color: #fff;
+}
+
+.until {
+    background-color: #E3C4EC;
+    font-weight: bold;
+    color: #532063;
+}
+
+.cartButton {
+    padding: 4px;
+    font-weight: bold;
+    font-size: .9em;
+}
+
+.bar-zeliftPink {
+    background-color: #CB4AA8;
+    color: #fff;
+}
+
+.price {
+    padding: 4px;
+    border: solid 1px;
+    border-radius: 4px;
+    background-color: #CB4AA8;
     color: #fff;
 }
 
@@ -212,6 +261,10 @@
     background-color: #6E358B;
     color: #fff;
 }
+
+  .toggle.toggle-zelift input:checked + .track {
+    border-color: #6E358B;
+    background-color: #6E358B; }
 
 .bar.bar-zelift .title, .white {
     color: #fff;
@@ -324,3 +377,37 @@
     border-color: transparent;
     background: none;
 }
+
+.input-minlabel {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 100px;
+  -moz-box-flex: 1;
+  -moz-flex: 1 0 100px;
+  -ms-flex: 1 0 100px;
+  flex: 1 0 100px;
+  display: table;
+  padding: 7px 10px 7px 0px;
+  max-width: 50px;
+  width: 10%;
+  color: #444;
+  font-size: 16px;
+}
+
+.minselect {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 14px 18px 16px 16px;
+    max-width: 90%;
+    border: none;
+    background: #fff;
+    color: #333;
+    text-indent: 0.01px;
+    text-overflow: '';
+    white-space: nowrap;
+    font-size: 14px;
+    cursor: pointer;
+    direction: ltr; }
