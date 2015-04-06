@@ -11,7 +11,7 @@
         <h3 class="zeliftColor up bold">{{viewTitle}}</h3>
         <form name="form" ng-submit="doOffreIn(form)">
             <div ng-if="showQuantity">
-                <h3 ng-if="offreinform.quantity.type != 'min_max' && offreinform.quantity.type != 'list_one'">{{offreinform.quantity.label}}</h3>
+                <h3 ng-if="offreinform.quantity.type != 'min_max' && offreinform.quantity.type != 'list_one' && offreinform.quantity.type != 'list_quantified' && offreinform.quantity.type != 'multiple_one'">{{offreinform.quantity.label}}</h3>
                 <label class="item item-input item-select" ng-if="offreinform.quantity.type == 'min_max'">
                     <div class="input-label">
                         <h3>{{offreinform.quantity.label}}</h3>
@@ -33,6 +33,24 @@
                 </label>
 
                 <input ng-class="{'item-assertive': form.quantity.$touched && form.quantity.$error.required}" type="number" ng-min="offreinform.quantity.min" ng-max="offreinform.quantity.max" name="quantity" ng-model="dataOffreinform.quantity" ng-if="offreinform.quantity.type == 'int'" />
+
+                <div ng-if="offreinform.quantity.type == 'multiple_one'">
+                    <h3>{{offreinform.quantity.label}}</h3>
+                    <div class="list">
+                        <ion-checkbox ng-repeat="v in offreinform.multiple_one_values" ng-model="dataOffreinform['quantity_' + v.id]" ng-checked="dataOffreinform['quantity_' + v.id]" class="checkbox-zelift item-text-wrap">{{v.value}}</ion-checkbox>
+                    </div>
+                </div>
+
+                <div ng-if="offreinform.quantity.type == 'list_quantified'">
+                    <label class="item item-input item-select">
+                        <div class="input-label">
+                            <h4>{{offreinform.quantity.label}}</h4>
+                        </div>
+                        <select name="ql" ng-options="v.id as v.value for v in offreinform.list_quantified_values" ng-model="ql" ng-change="changeListQuantified(form)"></select>
+                    </label>
+                    <br>
+                    <input placeholder="Renseigner une quantité en {{offreinform.quantity.unite}}" type="number" ng-repeat="v in offreinform.list_quantified_values" name="quantity_{{v.id}}" ng-model="dataOffreinform['quantity_' + v.id]" ng-show="qkv[v.id] == true" />
+                </div>
 
                 <div ng-if="offreinform.quantity.type == 'multiple'">
                     <div ng-repeat="v in offreinform.multiple_values">

@@ -223,6 +223,12 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+.checkbox-zelift input:before, .checkbox-zelift .checkbox-icon:before {
+  border-color: #6E358B; }
+.checkbox-zelift input:checked:before, .checkbox-zelift input:checked + .checkbox-icon:before {
+  background: #6E358B;
+  border-color: #6E358B; }
+
 .zeliftColor {
     color: #6E358B;
 }
@@ -411,3 +417,31 @@
     font-size: 14px;
     cursor: pointer;
     direction: ltr; }
+
+input[type="number"] {
+    border: solid 1px;
+    padding: 4px;
+    border-radius: 6px !important;
+    border-color: #CB4AA8;
+}
+
+.error {
+    border-color: #e42012;
+    background-color: #ef473a;
+    background-image: linear-gradient(0deg, #e42012, #e42012 50%, transparent 50%);
+    color: #fff;
+}
+
+.info {
+    border-color: #0c63ee;
+    background-color: #387ef5;
+    background-image: linear-gradient(0deg, #0c63ee, #0c63ee 50%, transparent 50%);
+    color: #fff;
+}
+
+.infoZelift {
+    border-color: #412350;
+    background-color: #6E358B;
+    background-image: linear-gradient(0deg, #412350, #412350 50%, transparent 50%);
+    color: #fff;
+}

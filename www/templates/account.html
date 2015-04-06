@@ -1,0 +1,11 @@
+﻿<ion-view title="{{viewTitle}}">
+    <ion-nav-buttons side="right">
+        <!-- <a ng-click="shareAnywhere()" class="button button-clear icon ion-android-share-alt fa-2x" href="#"></a> -->
+        <a ng-if="connected === true" class="button button-clear icon ion-android-more-vertical" ng-click="popover.show($event)"></a>
+    </ion-nav-buttons>
+    <ion-content class="has-header padding">
+        <hgroup class="text-center padding-vertical">
+            <h2 class="title">Mon compte</h2>
+        </hgroup>
+    </ion-content>
+</ion-view>

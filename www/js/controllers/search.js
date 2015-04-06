@@ -3,7 +3,7 @@
 
     angular.module('zelift').controller('search', searchController);
 
-    function searchController($http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log) {
+    function searchController($ionicPopup, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log) {
         $scope.searchData = {};
         $scope.viewTitle = 'Rechercher un service';
 

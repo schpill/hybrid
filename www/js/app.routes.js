@@ -96,6 +96,54 @@
                 }
             });
 
+            //**  about
+            $stateProvider.state('zelift.about', {
+                url: '/about',
+                cache: false,
+                views: {
+                    'main': {
+                        templateUrl: 'templates/about.html',
+                        controller: 'about'
+                    }
+                }
+            });
+
+            //**  myoffers
+            $stateProvider.state('zelift.myoffers', {
+                url: '/myoffers',
+                cache: false,
+                views: {
+                    'main': {
+                        templateUrl: 'templates/myoffers.html',
+                        controller: 'myoffers'
+                    }
+                }
+            });
+
+            //**  account
+            $stateProvider.state('zelift.account', {
+                url: '/account',
+                cache: false,
+                views: {
+                    'main': {
+                        templateUrl: 'templates/account.html',
+                        controller: 'account'
+                    }
+                }
+            });
+
+            //**  myzelift
+            $stateProvider.state('zelift.myzelift', {
+                url: '/myzelift',
+                cache: false,
+                views: {
+                    'main': {
+                        templateUrl: 'templates/myzelift.html',
+                        controller: 'myzelift'
+                    }
+                }
+            });
+
             //** Default
             $urlRouterProvider.otherwise('/zelift/home');
         });

@@ -39,6 +39,24 @@
             'langue' : 'non'
         };
 
+        $scope.qty = 0;
+        $scope.qkv = [];
+
+        $scope.changeListQuantified = function (form) {
+            var ind = parseInt(form.ql.$viewValue);
+
+            for (var i = 0; i < $scope.offreinform.list_quantified_values.length; i++) {
+                var v = $scope.offreinform.list_quantified_values[i];
+
+                if (v.id == ind) {
+                    $scope.qkv[v.id] = true;
+                } else {
+                    $scope.dataOffreinform['quantity_' + v.id] = '';
+                    $scope.qkv[v.id] = false;
+                }
+            }
+        }
+
         $scope.doOffreIn = function (form) {
             if (form.$valid) {
                 $http.post($rootScope.apiUrl + 'offreinsubmit', $scope.dataOffreinform)
@@ -215,58 +233,111 @@
                 'id' : segmentId
             };
 
-            $http.post($rootScope.apiUrl + 'offreinform', dataOffreIn)
-            .success(function(data) {
-                switch (data.status) {
-                    case 200:
-                        $timeout(function() {
-                            $scope.viewTitle = data.results.title;
-                            $scope.addresses = data.results.addresses;
+            $scope.remember('offreinform.' + segmentId, function () {
+                $http.post($rootScope.apiUrl + 'offreinform', dataOffreIn)
+                .success(function(data) {
+                    switch (data.status) {
+                        case 200:
+                            $timeout(function() {
+                                $scope.addRemember('offreinform.' + segmentId, data.results);
+                                $scope.viewTitle = data.results.title;
+                                $scope.addresses = data.results.addresses;
 
-                            if ($scope.addresses.length > 0) {
-                                $scope.dataOffreinform.address_id = data.results.addresses[0].id;
-                            }
+                                if ($scope.addresses.length > 0) {
+                                    $scope.dataOffreinform.address_id = data.results.addresses[0].id;
+                                }
 
-                            $scope.offreinform = data.results.form;
+                                $scope.offreinform = data.results.form;
 
-                            $scope.showQuantity = data.results.form.quantity.label.length > 0;
+                                $scope.showQuantity = false;
 
-                            if ($scope.offreinform.quantity.opts.price.length > 0) {
-                                for (var i = 0; i < $scope.offreinform.quantity.opts.price.length; i++) {
-                                    var opt = $scope.offreinform.quantity.opts.price[i];
+                                if (data.results.form.quantity) {
+                                    if (data.results.form.quantity.label) {
+                                        $scope.showQuantity = data.results.form.quantity.label.length > 0;
+                                    }
 
-                                    if (opt.content.type == 'oui_non') {
-                                        $scope.dataOffreinform['option_price_' + opt.name] = opt.content.default == 'non' ? false : true;
+                                    if ($scope.offreinform.quantity.opts.price.length > 0) {
+                                        for (var i = 0; i < $scope.offreinform.quantity.opts.price.length; i++) {
+                                            var opt = $scope.offreinform.quantity.opts.price[i];
+
+                                            if (opt.content.type == 'oui_non') {
+                                                $scope.dataOffreinform['option_price_' + opt.name] = opt.content.default == 'non' ? false : true;
+                                            }
+                                        }
+                                    }
+
+                                    if (data.results.form.quantity.type == 'min_max') {
+                                        $scope.dataOffreinform.quantity = data.results.form.quantity.min;
+                                    }
+
+                                    if (data.results.form.quantity.type == 'list_quantified') {
+                                        $scope.dataOffreinform.ql = 1;
+                                    }
+
+                                    if (data.results.form.quantity.type == 'int') {
+                                        $scope.dataOffreinform.quantity = parseInt(data.results.form.quantity.default);
                                     }
                                 }
-                            }
+                            }, 300);
 
-                            if (data.results.form.quantity.type == 'min_max') {
-                                $scope.dataOffreinform.quantity = data.results.form.quantity.min;
-                            }
+                            break;
+                        case 500:
+                            $ionicPopup.alert({
+                                title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i>',
+                                template: data.message,
+                                buttons: [{
+                                    text: 'OK',
+                                    type: 'button button-full button-zelift'
+                                }]
+                            });
 
-                            if (data.results.form.quantity.type == 'int') {
-                                $scope.dataOffreinform.quantity = parseInt(data.results.form.quantity.default);
-                            }
-                        }, 300);
+                            break;
+                    }
+                })
+                .error(function (data, status) {
+                    $log.log($rootScope.apiUrl + 'children');
+                    $log.log(status);
+                });
+            }, function (res) {
+                $scope.viewTitle = res.title;
+                $scope.addresses = res.addresses;
 
-                        break;
-                    case 500:
-                        $ionicPopup.alert({
-                            title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i>',
-                            template: data.message,
-                            buttons: [{
-                                text: 'OK',
-                                type: 'button button-full button-zelift'
-                            }]
-                        });
-
-                        break;
+                if ($scope.addresses.length > 0) {
+                    $scope.dataOffreinform.address_id = res.addresses[0].id;
                 }
-            })
-            .error(function (data, status) {
-                $log.log($rootScope.apiUrl + 'children');
-                $log.log(status);
+
+                $scope.offreinform = res.form;
+
+                $scope.showQuantity = false;
+
+                if (res.form.quantity) {
+                    if (res.form.quantity.label) {
+                        $scope.showQuantity = res.form.quantity.label.length > 0;
+                    }
+
+
+                    if ($scope.offreinform.quantity.opts.price.length > 0) {
+                        for (var i = 0; i < $scope.offreinform.quantity.opts.price.length; i++) {
+                            var opt = $scope.offreinform.quantity.opts.price[i];
+
+                            if (opt.content.type == 'oui_non') {
+                                $scope.dataOffreinform['option_price_' + opt.name] = opt.content.default == 'non' ? false : true;
+                            }
+                        }
+                    }
+
+                    if (res.form.quantity.type == 'min_max') {
+                        $scope.dataOffreinform.quantity = res.form.quantity.min;
+                    }
+
+                    if (res.form.quantity.type == 'list_quantified') {
+                        $scope.dataOffreinform.ql = 1;
+                    }
+
+                    if (res.form.quantity.type == 'int') {
+                        $scope.dataOffreinform.quantity = parseInt(res.form.quantity.default);
+                    }
+                }
             });
         }
 

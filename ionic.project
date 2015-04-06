@@ -7,11 +7,5 @@
       "browser": "crosswalk",
       "version": "10.39.235.15"
     }
-  ],
-  "proxies": [
-    {
-      "path": "/api",
-      "proxyUrl": "http://zelift.inovigroupe.com/api"
-    }
   ]
 }

@@ -3,7 +3,7 @@
 
     angular.module('zelift').controller('services', servicesController);
 
-    function servicesController($http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log) {
+    function servicesController($ionicPopup, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log) {
         $scope.viewTitle = 'Les services';
 
         $scope.getItemUrl = function (item) {

@@ -11,7 +11,7 @@
 		$scope.isWin      = ionic.Platform.isWindowsPhone();
         $scope.store      = store;
         $scope.utils      = utils;
-        $scope.serverUrl  = 'http://192.168.1.17/res';
+        $scope.serverUrl  = 'http://zelift.inovigroupe.com';
 
         $scope.user = angular.fromJson(localStorage.getItem('user'));
 
@@ -32,6 +32,8 @@
                 $scope.user.version     = $cordovaDevice.getVersion();
 
                 $scope.db = $cordovaSQLite.openDB({name: "zelift.db", bgType: 1});
+
+                $scope.hasLite = typeof $scope.db === 'object';
 
                 var q = "CREATE TABLE IF NOT EXISTS zecache (id integer primary key, keycache text, valuecache text, expirecache integer)";
 
@@ -142,6 +144,55 @@
                 });
             };
 
+            return $scope.hasLite === true ? self : $scope.miniDb();
+        };
+
+        $scope.miniDb = function () {
+            var self = this;
+
+            self.set = function (key, value) {
+                localStorage.setItem(key, JSON.stringify(value));
+
+                return self;
+            }
+
+            self.get = function (key, cb, defaultVal) {console.log(key);
+                var returnValue = localStorage.getItem(key);
+
+                if (!returnValue) {
+                    returnValue = defaultVal;
+                } else {
+                    returnValue = JSON.parse(returnValue);
+                }
+
+                cb(returnValue);
+            };
+
+            self.has = function (key, cb) {
+                var returnValue = localStorage.getItem(key);
+
+                if (!returnValue) {
+                    cb(false);
+                } else {
+                    cb(true);
+                }
+            };
+
+            self.delete = function(key, cb) {
+                localStorage.removeItem(key);
+                cb();
+            };
+
+            self.removeRemember = function(key) {
+                for (var i = 0; i < localStorage.length; i++) {
+                   var name = localStorage.key(i);
+
+                    if (name.match(key)) {
+                        localStorage.removeItem(name);
+                    }
+                }
+            };
+
             return self;
         };
 
@@ -173,6 +224,7 @@
 
         $scope.remember = function (name, cb1, cb2) {
             if ($scope.platformReady) {
+                console.log(typeof $scope.db);
                 var fsys = $scope.zeStore();
 
                 fsys.get('remember.' + name, function (data) {
@@ -351,6 +403,8 @@
                     'platform' : $scope.user.platform,
                     'model' : $scope.user.model
                 };
+
+                console.log(JSON.stringify($scope.loginData));
 
                 $http.post($rootScope.apiUrl + 'login', $scope.loginData)
                 .success(function(data) {

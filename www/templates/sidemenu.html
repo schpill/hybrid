@@ -25,19 +25,19 @@
                     <i class="icon ion-eye fa-ionicon"></i>
                     Parcourir les services
                 </ion-item>
-                <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/home" menu-close>
-                    <i class="icon ion-person fa-ionicon"></i>
+                <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/account" menu-close>
+                    <i class="icon ion-android-person fa-ionicon"></i>
                     Mon compte
                 </ion-item>
                 <ion-item class="item item-icon-left" ng-if="connected === false" ng-click="signup()" menu-close>
                     <i class="icon fa fa-plus fa-ionicon"></i>
                     S'inscrire
                 </ion-item>
-                <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/home" menu-close>
-                    <i class="icon ion-star fa-ionicon"></i>
-                    Mes services
+                <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/myoffers" menu-close>
+                    <i class="icon ion-ios-cart fa-ionicon"></i>
+                    Mes commandes
                 </ion-item>
-                <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/home" menu-close>
+                <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/settings" menu-close>
                     <i class="icon fa fa-cogs fa-ionicon"></i>
                     Paramètres
                 </ion-item>
@@ -45,7 +45,7 @@
                     <i class="icon fa fa-globe fa-ionicon"></i>
                     Carte
                 </ion-item>
-                <ion-item class="item item-icon-left" ng-click="go('zelift.home')" menu-close>
+                <ion-item class="item item-icon-left" href="#/zelift/about" menu-close>
                     <i class="icon ion-help-circled fa-ionicon"></i>
                     &Agrave; propos
                 </ion-item>
