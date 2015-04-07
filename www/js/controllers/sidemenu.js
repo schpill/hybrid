@@ -43,10 +43,63 @@
                     console.error(err);
                 });
 
-                navigator.geolocation.getCurrentPosition(function(position) {
+                // $cordovaGeolocation
+                // .getCurrentPosition({timeout: 1000, enableHighAccuracy: true})
+                // .then(function (position) {
+                //     var lat  = position.coords.latitude;
+                //     var lng = position.coords.longitude;
+                // }, function(e) {
+                //     console.log(e.message);
+                // });
+
+                if (google.loader.ClientLocation) {
                     $scope.isDev = false;
-                    console.log('OK geo');
-                });
+                    // $scope.loc();
+                }
+
+                $scope.loc = function () {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            var lat = position.coords.latitude;
+                            var lng = position.coords.longitude;
+
+                            console.log('geo true [lng = ' + lng + ',  lat = ' + lat + ']');
+
+                            $scope.position         = {'lng':lng,'lat':lat};
+                            $scope.user.latitude    = lat;
+                            $scope.user.longitude   = lng;
+
+                            localStorage.setItem('latitude', lat);
+                            localStorage.setItem('longitude', lng);
+                            $scope.isDev = false;
+                        }, function (e) {
+                            var latitude = 47.324146;
+                            var longitude = 5.034246;
+
+                            if ($scope.user) {
+                                if ($scope.user.sellzone) {
+                                    if ($scope.user.sellzone.latitude) {
+                                        latitude = $scope.user.sellzone.latitude;
+                                    }
+
+                                    if ($scope.user.sellzone.longitude) {
+                                        longitude = $scope.user.sellzone.longitude;
+                                    }
+                                }
+                            }
+
+                            console.log('sellzone coords');
+
+                            $scope.position = {'longitude':longitude,'latitude':latitude};
+                            $scope.user.latitude    = $scope.position.latitude;
+                            $scope.user.longitude   = $scope.position.longitude;
+                            localStorage.setItem('latitude', $scope.user.latitude);
+                            localStorage.setItem('longitude', $scope.user.longitude);
+                        }, {timeout: 1000, enableHighAccuracy: true});
+                    }
+                };
+
+                $scope.loc();
 
                 // var fsys = fs.init();
 
@@ -298,30 +351,28 @@
             }
         };
 
-        $scope.loc = function () {
-            if (!$scope.isDev) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    $rootScope.$apply(function() {
-                        console.log('Coords');
-                        $scope.position         = position.coords;
-                        $scope.user.latitude    = position.coords.latitude;
-                        $scope.user.longitude   = position.coords.longitude;
+        // $scope.loc = function () {
+        //     if (!$scope.isDev && google.loader.ClientLocation) {
+        //         var lat = google.loader.ClientLocation.latitude;
+        //         var lng = google.loader.ClientLocation.longitude;
 
-                        localStorage.setItem('latitude', $scope.user.latitude);
-                        localStorage.setItem('longitude', $scope.user.longitude);
-                        localStorage.setItem('coords.age', position.timestamp);
-                    });
-                }, function (error) {}, {timeout: 1000, enableHighAccuracy: true, maximumAge: 90000});
-            } else {
-                $scope.position = {'longitude':5.034246,'latitude':47.324146};
-                $scope.user.latitude    = $scope.position.latitude;
-                $scope.user.longitude   = $scope.position.longitude;
-                localStorage.setItem('latitude', $scope.user.latitude);
-                localStorage.setItem('longitude', $scope.user.longitude);
-            }
-        };
+        //         console.log('geo true [lng = ' + lng + ',  lat = ' + lat + ']');
 
-        $scope.loc();
+        //         $scope.position         = {'lng':lng,'lat':lat};
+        //         $scope.user.latitude    = lat;
+        //         $scope.user.longitude   = lng;
+
+        //         localStorage.setItem('latitude', lat);
+        //         localStorage.setItem('longitude', lng);
+        //     } else {
+        //         console.log('geo false');
+        //         $scope.position = {'longitude':5.034246,'latitude':47.324146};
+        //         $scope.user.latitude    = $scope.position.latitude;
+        //         $scope.user.longitude   = $scope.position.longitude;
+        //         localStorage.setItem('latitude', $scope.user.latitude);
+        //         localStorage.setItem('longitude', $scope.user.longitude);
+        //     }
+        // };
 
         $scope.locate = function () {
             $scope.loc();

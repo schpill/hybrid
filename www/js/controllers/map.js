@@ -49,6 +49,7 @@
 
                 function createMap() {
                     console.log("map: create map start");
+
                     var mapOptions = {
                         zoom: 15,
                         center: new google.maps.LatLng(localStorage.getItem('latitude'), localStorage.getItem('longitude')),

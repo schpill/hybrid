@@ -17,17 +17,8 @@
   <preference name="BackupWebStorage" value="none"/>
   <preference name="SplashScreen" value="screen"/>
   <preference name="SplashScreenDelay" value="0"/>
-  <feature name="Geolocation">
-    <param name="android-package" value="org.apache.cordova.geolocation.GeoBroker" />
-  </feature>
-  <Capabilities>
-    <Capability Name="ID_CAP_LOCATION" />
-  </Capabilities>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
-  </feature>
-  <feature name="Geolocation">
-    <param name="ios-package" value="CDVLocation" />
   </feature>
   <feature name="SocialSharing">
     <param name="ios-package" value="SocialSharing"/>
