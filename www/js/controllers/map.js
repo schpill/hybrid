@@ -71,6 +71,7 @@
                             e.preventDefault();
                             return false;
                         });
+
                         infowindow = new google.maps.InfoWindow();
                     }
                 }

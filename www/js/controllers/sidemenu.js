@@ -5,7 +5,7 @@
     .controller('sidemenu', SideMenu);
 
 	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $cordovaSQLite, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $cordovaGeolocation, $ionicPopover, $ionicHistory) {
-        $scope.isDev = true;
+        $scope.isDev      = true;
 		$scope.isWebView  = ionic.Platform.isWebView();
 		$scope.isIos      = ionic.Platform.isIOS();
 		$scope.isWin      = ionic.Platform.isWindowsPhone();
@@ -41,6 +41,10 @@
                     console.log("Table zecache created");
                 }, function (err) {
                     console.error(err);
+                });
+
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    $scope.isDev = false;
                 });
 
                 // var fsys = fs.init();
@@ -156,7 +160,7 @@
                 return self;
             }
 
-            self.get = function (key, cb, defaultVal) {console.log(key);
+            self.get = function (key, cb, defaultVal) {
                 var returnValue = localStorage.getItem(key);
 
                 if (!returnValue) {
@@ -390,6 +394,7 @@
             localStorage.removeItem('user');
             $timeout(function() {
                 $scope.connected = false;
+                $scope.go('zelift.home');
             }, 300);
         };
 

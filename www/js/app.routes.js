@@ -144,6 +144,18 @@
                 }
             });
 
+            //**  settings
+            $stateProvider.state('zelift.settings', {
+                url: '/settings',
+                cache: false,
+                views: {
+                    'main': {
+                        templateUrl: 'templates/settings.html',
+                        controller: 'settings'
+                    }
+                }
+            });
+
             //** Default
             $urlRouterProvider.otherwise('/zelift/home');
         });

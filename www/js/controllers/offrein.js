@@ -87,7 +87,7 @@
             } else {
                 $ionicPopup.alert({
                     title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i>',
-                    template: "Merci de corriger le formulaire",
+                    template: "Merci de corriger ou compléter le formulaire",
                     buttons: [{
                         text: 'OK',
                         type: 'button button-full button-zelift'
