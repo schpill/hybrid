@@ -45,6 +45,7 @@
 
                 navigator.geolocation.getCurrentPosition(function(position) {
                     $scope.isDev = false;
+                    console.log('OK geo');
                 });
 
                 // var fsys = fs.init();
@@ -321,6 +322,11 @@
         };
 
         $scope.loc();
+
+        $scope.locate = function () {
+            $scope.loc();
+            $scope.go('zelift.home');
+        };
 
 		$scope.exit = function () {
 			ionic.Platform.exitApp();

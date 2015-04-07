@@ -32,14 +32,18 @@
 
                             break;
                         case 500:
-                            $ionicPopup.alert({
-                                title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i>',
-                                template: data.message,
-                                buttons: [{
-                                    text: 'OK',
-                                    type: 'button button-full button-zelift'
-                                }]
-                            });
+                            if (data.message.match('ession invalide')) {
+                                $scope.signOut();
+                            } else {
+                                $ionicPopup.alert({
+                                    title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i>',
+                                    template: data.message,
+                                    buttons: [{
+                                        text: 'OK',
+                                        type: 'button button-full button-zelift'
+                                    }]
+                                });
+                            }
 
                             break;
                     }
