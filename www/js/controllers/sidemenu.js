@@ -202,7 +202,7 @@
                 });
             };
 
-            return $scope.hasLite === true ? self : $scope.miniDb();
+            return $scope.hasLite === false ? self : fs.init();
         };
 
         $scope.miniDb = function () {

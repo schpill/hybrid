@@ -41,6 +41,7 @@
                         var reader = new FileReader();
 
                         reader.onloadend = function(event) {
+                            console.log('get it ' + key);
                             cb(JSON.parse(event.target.result));
                         };
 
