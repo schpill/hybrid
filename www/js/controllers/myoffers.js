@@ -3,8 +3,9 @@
 
     angular.module('zelift').controller('myoffers', myOffersController);
 
-    function myOffersController($ionicPlatform, $ionicModal, $ionicPopup, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log) {
+    function myOffersController($ionicPlatform, $ionicModal, $ionicPopup, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log, global) {
 
+        global.setScope($scope);
         $scope.wsData = {
             'account_id' : $scope.user.id,
             'token' : $scope.user.token

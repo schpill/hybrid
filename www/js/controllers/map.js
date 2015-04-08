@@ -81,9 +81,10 @@
     })
     .controller('map', mapController);
 
-    function mapController($ionicPlatform, $http, $rootScope, $window, $scope, $ionicLoading, $compile, $filter, $state, utils, store, $stateParams, $timeout, $location) {
-        $scope.viewTitle = 'Carte';
-        $scope.loc();
-    }
+    function mapController($ionicPlatform, $http, $rootScope, $window, $scope, $ionicLoading, $compile, $filter, $state, utils, store, $stateParams, $timeout, $location, global) {
 
+        global.setScope($scope);
+        $scope.viewTitle = 'Carte';
+        global.localize();
+    }
 })();

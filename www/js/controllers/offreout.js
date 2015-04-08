@@ -3,7 +3,8 @@
 
     angular.module('zelift').controller('offreout', offreoutController);
 
-    function offreoutController($ionicPlatform, $ionicModal, $ionicPopup, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log, $cordovaDatePicker) {
+    function offreoutController($ionicPlatform, $ionicModal, $ionicPopup, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log, global) {
+        global.setScope($scope);
         $ionicPlatform.ready(function () {
             $scope.getRemember('offresout.services', function (datas) {
                 $scope.offersData = datas;

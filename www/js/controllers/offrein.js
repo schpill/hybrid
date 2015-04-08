@@ -3,7 +3,8 @@
 
     angular.module('zelift').controller('offrein', offreinController);
 
-    function offreinController($ionicModal, $ionicPopup, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log, $cordovaDatePicker) {
+    function offreinController($ionicModal, $ionicPopup, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log, global) {
+        global.setScope($scope);
         $scope.getItemUrl = function (item) {
             return item.is_item != 1 ? '#/zelift/children/' + item.id : '#/zelift/offrein/' + item.id;
         };

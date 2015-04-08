@@ -2,9 +2,67 @@
 	'use strict';
 
 	angular.module('zelift')
+    .factory('global', function ($ionicPlatform) {
+        var self = this;
+
+        self.scope = null;
+
+        self.localize = function () {
+            var $scope = self.scope;
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+
+                    console.log('geo true [lng = ' + lng + ',  lat = ' + lat + ']');
+
+                    $scope.position         = {'lng':lng,'lat':lat};
+                    $scope.user.latitude    = lat;
+                    $scope.user.longitude   = lng;
+
+                    localStorage.setItem('latitude', lat);
+                    localStorage.setItem('longitude', lng);
+                    $scope.isDev = false;
+                }, function (e) {
+                    var latitude = 47.324146;
+                    var longitude = 5.034246;
+
+                    if ($scope.user) {
+                        if ($scope.user.sellzone) {
+                            if ($scope.user.sellzone.latitude) {
+                                latitude = $scope.user.sellzone.latitude;
+                            }
+
+                            if ($scope.user.sellzone.longitude) {
+                                longitude = $scope.user.sellzone.longitude;
+                            }
+                        }
+                    }
+
+                    console.log('sellzone coords');
+
+                    $scope.position = {'longitude': longitude, 'latitude': latitude};
+                    $scope.user.latitude    = $scope.position.latitude;
+                    $scope.user.longitude   = $scope.position.longitude;
+                    localStorage.setItem('latitude', $scope.user.latitude);
+                    localStorage.setItem('longitude', $scope.user.longitude);
+                }, {timeout: 1000, enableHighAccuracy: true});
+            }
+        };
+
+        self.setScope = function (scope) {
+            self.scope = scope;
+        };
+
+        return self;
+    })
     .controller('sidemenu', SideMenu);
 
-	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $cordovaSQLite, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $cordovaGeolocation, $ionicPopover, $ionicHistory) {
+	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $ionicPopover, $ionicHistory, global) {
+
+        global.setScope($scope);
+
         $scope.isDev      = true;
 		$scope.isWebView  = ionic.Platform.isWebView();
 		$scope.isIos      = ionic.Platform.isIOS();
@@ -31,17 +89,17 @@
                 $scope.user.uuid        = $cordovaDevice.getUUID();
                 $scope.user.version     = $cordovaDevice.getVersion();
 
-                $scope.db = $cordovaSQLite.openDB({name: "zelift.db", bgType: 1});
+                // $scope.db = $cordovaSQLite.openDB({name: "zelift.db", bgType: 1});
 
-                $scope.hasLite = typeof $scope.db === 'object';
+                // $scope.hasLite = typeof $scope.db === 'object';
 
-                var q = "CREATE TABLE IF NOT EXISTS zecache (id integer primary key, keycache text, valuecache text, expirecache integer)";
+                // var q = "CREATE TABLE IF NOT EXISTS zecache (id integer primary key, keycache text, valuecache text, expirecache integer)";
 
-                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                    console.log("Table zecache created");
-                }, function (err) {
-                    console.error(err);
-                });
+                // $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
+                //     console.log("Table zecache created");
+                // }, function (err) {
+                //     console.error(err);
+                // });
 
                 // $cordovaGeolocation
                 // .getCurrentPosition({timeout: 1000, enableHighAccuracy: true})
@@ -57,49 +115,7 @@
                     // $scope.loc();
                 }
 
-                $scope.loc = function () {
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(function (position) {
-                            var lat = position.coords.latitude;
-                            var lng = position.coords.longitude;
-
-                            console.log('geo true [lng = ' + lng + ',  lat = ' + lat + ']');
-
-                            $scope.position         = {'lng':lng,'lat':lat};
-                            $scope.user.latitude    = lat;
-                            $scope.user.longitude   = lng;
-
-                            localStorage.setItem('latitude', lat);
-                            localStorage.setItem('longitude', lng);
-                            $scope.isDev = false;
-                        }, function (e) {
-                            var latitude = 47.324146;
-                            var longitude = 5.034246;
-
-                            if ($scope.user) {
-                                if ($scope.user.sellzone) {
-                                    if ($scope.user.sellzone.latitude) {
-                                        latitude = $scope.user.sellzone.latitude;
-                                    }
-
-                                    if ($scope.user.sellzone.longitude) {
-                                        longitude = $scope.user.sellzone.longitude;
-                                    }
-                                }
-                            }
-
-                            console.log('sellzone coords');
-
-                            $scope.position = {'longitude':longitude,'latitude':latitude};
-                            $scope.user.latitude    = $scope.position.latitude;
-                            $scope.user.longitude   = $scope.position.longitude;
-                            localStorage.setItem('latitude', $scope.user.latitude);
-                            localStorage.setItem('longitude', $scope.user.longitude);
-                        }, {timeout: 1000, enableHighAccuracy: true});
-                    }
-                };
-
-                $scope.loc();
+                global.localize();
 
                 // var fsys = fs.init();
 
@@ -202,7 +218,7 @@
                 });
             };
 
-            return $scope.hasLite === false ? self : fs.init();
+            return fs.init();
         };
 
         $scope.miniDb = function () {

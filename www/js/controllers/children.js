@@ -3,7 +3,8 @@
 
     angular.module('zelift').controller('children', childrenController);
 
-    function childrenController($ionicPopup, $ionicPlatform, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log) {
+    function childrenController($ionicPopup, $ionicPlatform, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log, global) {
+        global.setScope($scope);
         $scope.getItemUrl = function (item) {
             return item.is_item != 1 ? '#/zelift/children/' + item.id : '#/zelift/offrein/' + item.id;
         };
