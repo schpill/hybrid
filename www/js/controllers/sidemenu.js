@@ -2,10 +2,120 @@
 	'use strict';
 
 	angular.module('zelift')
-    .factory('global', function ($ionicPlatform) {
+    .factory('jdb', function ($ionicPlatform, fs) {
         var self = this;
 
-        self.scope = null;
+        self.orm = fs.init();
+        self.config = {};
+        self.res = {};
+
+        self.cb = function (res) {
+            return res;
+        };
+
+        self.init = function (db, table) {
+            self.config.db = db;
+            self.config.table = table;
+            self.config.collection = db + '_' + table;
+
+            return self;
+        };
+
+        self.makeId = function (cb) {
+            self.orm.get(self.config.collection + '.counter', function (res) {
+                var oldId = parseInt(res);
+                var id = oldId + 1;
+                self.orm.set(self.config.collection + '.counter', id);
+
+                cb(id);
+            }, 0);
+        };
+
+        self.find = function (id, cb) {
+            var key = self.config.collection + '.row.' + id;
+
+            self.orm.get(key, function (res) {
+                cb(res);
+            });
+        };
+
+        self.save = function (data, cb) {
+            if (data.id) {
+                self.update(data, cb);
+            } else {
+                self.insert(data, cb);
+            }
+        };
+
+        self.insert = function (data, cb) {
+            cb = typeof cb !== 'function' ? self.cb : cb;
+
+            self.makeId(function (id) {
+                id = parseInt(id);
+                data.id = id;
+
+                var key = self.config.collection + '.row.' + id;
+
+                self.orm.set(key, data);
+
+                cb(data);
+            });
+        };
+
+        self.update = function (data, cb) {
+            cb = typeof cb !== 'function' ? self.cb : cb;
+
+            var id = parseInt(data.id);
+            var key = self.config.collection + '.row.' + id;
+
+            self.orm.set(key, data);
+            cb(data);
+        };
+
+        self.delete = function (id, cb) {
+            cb = typeof cb !== 'function' ? self.cb : cb;
+            id = parseInt(id);
+
+            var key = self.config.collection + '.row.' + id;
+
+            self.orm.del(key);
+            cb(true);
+        };
+
+        self.all = function (cb) {
+            var pattern = self.config.collection + '.row.';
+
+            self.orm.keys(pattern, function (collection) {
+                var newCollection = [];
+
+                var rep = pattern.split('.').join('_');
+                self.makeCollectionId(rep, collection, newCollection, cb);
+            });
+        };
+
+        self.makeCollectionId = function (rep, collection, newCollection, cb) {
+            if (collection.length > 0) {
+                for (var i = 0; i < collection.length; i++) {
+                    var idRow = collection[i].split(rep).join('');
+
+                    self.find(idRow, function (row) {console.log('uid ' + row);
+                        newCollection.push(row);
+                        collection.shift();
+
+                        self.makeCollectionId(rep, collection, newCollection, cb);
+                    });
+                }
+            }
+
+            cb(newCollection);
+        }
+
+        return self;
+    })
+    .factory('global', function ($ionicPlatform, fs) {
+        var self = this;
+
+        self.scope = {};
 
         self.localize = function () {
             var $scope = self.scope;
@@ -17,7 +127,7 @@
 
                     console.log('geo true [lng = ' + lng + ',  lat = ' + lat + ']');
 
-                    $scope.position         = {'lng':lng,'lat':lat};
+                    $scope.position         = {'lng': lng, 'lat': lat};
                     $scope.user.latitude    = lat;
                     $scope.user.longitude   = lng;
 
@@ -59,7 +169,7 @@
     })
     .controller('sidemenu', SideMenu);
 
-	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $ionicPopover, $ionicHistory, global) {
+	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $ionicPopover, $ionicHistory, global, jdb, $cordovaPush, memo) {
 
         global.setScope($scope);
 
@@ -67,7 +177,7 @@
 		$scope.isWebView  = ionic.Platform.isWebView();
 		$scope.isIos      = ionic.Platform.isIOS();
 		$scope.isWin      = ionic.Platform.isWindowsPhone();
-        $scope.store      = store;
+        $scope.store      = function () {return memo.init();};
         $scope.utils      = utils;
         $scope.serverUrl  = 'http://zelift.inovigroupe.com';
 
@@ -89,6 +199,12 @@
                 $scope.user.uuid        = $cordovaDevice.getUUID();
                 $scope.user.version     = $cordovaDevice.getVersion();
 
+                // var myDb = jdb.init('core', 'test');
+
+                // myDb.all(function (data) {
+                //     console.log('ALL => ' + JSON.stringify(data));
+                // });
+
                 // $scope.db = $cordovaSQLite.openDB({name: "zelift.db", bgType: 1});
 
                 // $scope.hasLite = typeof $scope.db === 'object';
@@ -109,11 +225,6 @@
                 // }, function(e) {
                 //     console.log(e.message);
                 // });
-
-                if (google.loader.ClientLocation) {
-                    $scope.isDev = false;
-                    // $scope.loc();
-                }
 
                 global.localize();
 
@@ -465,6 +576,7 @@
 
         $scope.signOut = function () {
             localStorage.removeItem('user');
+
             $timeout(function() {
                 $scope.connected = false;
                 $scope.go('zelift.home');
@@ -479,7 +591,8 @@
                     'version' : $scope.user.version,
                     'uuid' : $scope.user.uuid,
                     'platform' : $scope.user.platform,
-                    'model' : $scope.user.model
+                    'model' : $scope.user.model,
+                    'regid' : localStorage.getItem('regid')
                 };
 
                 console.log(JSON.stringify($scope.loginData));
@@ -496,7 +609,9 @@
 
                             $timeout(function() {
                                 $scope.connected = true;
-                                $scope.loc();
+
+                                global.localize();
+
                                 $scope.closeRegister();
                             }, 300);
                             break;

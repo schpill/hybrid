@@ -16,19 +16,22 @@
         function getMarkets()
         {
             var dataServices = {
-                'token' : $scope.user.token,
                 'id' : 0,
                 'u' : 'services'
             };
 
-            $scope.remember('univers.services', function () {
+            if ($scope.user.token) {
+                dataServices.token = $scope.user.token;
+            }
+
+            $scope.remember('univers.services.detail', function () {
                 $http.post($rootScope.apiUrl + 'market', dataServices)
                 .success(function(data) {
                     switch (data.status) {
                         case 200:
                             $timeout(function() {
                                 $scope.servicesItems = data.results;
-                                $scope.addRemember('univers.services', data.results);
+                                $scope.addRemember('univers.services.detail', data.results);
                             }, 300);
 
                             break;

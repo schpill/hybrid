@@ -3,13 +3,17 @@
 
     angular.module('zelift').controller('offrein', offreinController);
 
-    function offreinController($ionicModal, $ionicPopup, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log, global) {
+    function offreinController($ionicModal, $ionicPopup, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log, global, $cordovaDialogs, $location) {
+
         global.setScope($scope);
+
         $scope.getItemUrl = function (item) {
             return item.is_item != 1 ? '#/zelift/children/' + item.id : '#/zelift/offrein/' + item.id;
         };
 
         var segmentId = $stateParams.segmentId;
+
+        $scope.store().set('last.location', '#/zelift/offrein/' + segmentId);
 
         $ionicModal.fromTemplateUrl('templates/addaddress.html', {
             scope: $scope
@@ -234,13 +238,13 @@
                 'id' : segmentId
             };
 
-            $scope.remember('offreinform.' + segmentId, function () {
+            $scope.remember('offreinforms.' + segmentId, function () {
                 $http.post($rootScope.apiUrl + 'offreinform', dataOffreIn)
                 .success(function(data) {
                     switch (data.status) {
                         case 200:
                             $timeout(function() {
-                                $scope.addRemember('offreinform.' + segmentId, data.results);
+                                $scope.addRemember('offreinforms.' + segmentId, data.results);
                                 $scope.viewTitle = data.results.title;
                                 $scope.addresses = data.results.addresses;
 
@@ -283,14 +287,16 @@
 
                             break;
                         case 500:
-                            $ionicPopup.alert({
-                                title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i>',
-                                template: data.message,
-                                buttons: [{
-                                    text: 'OK',
-                                    type: 'button button-full button-zelift'
-                                }]
-                            });
+                            $cordovaDialogs.alert(data.message, 'information');
+                            $scope.go('zelift.home');
+                            // $ionicPopup.alert({
+                            //     title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i>',
+                            //     template: data.message,
+                            //     buttons: [{
+                            //         text: 'OK',
+                            //         type: 'button button-full button-zelift'
+                            //     }]
+                            // });
 
                             break;
                     }

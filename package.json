@@ -21,10 +21,15 @@
     },
     "org.apache.cordova.file",
     "org.apache.cordova.inappbrowser",
+    "com.phonegap.plugins.PushPlugin",
+    "nl.x-services.plugins.socialsharing",
     "org.apache.cordova.device",
     "org.apache.cordova.console",
     "com.ionic.keyboard",
-    "org.apache.cordova.geolocation"
+    "org.apache.cordova.dialogs",
+    "org.apache.cordova.statusbar",
+    "org.apache.cordova.media",
+    "com.phonegap.plugins.barcodescanner"
   ],
   "cordovaPlatforms": [
     "android"

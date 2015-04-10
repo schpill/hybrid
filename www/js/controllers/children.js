@@ -16,12 +16,15 @@
         function getChildrenMarkets()
         {
             var dataChildren = {
-                'token' : $scope.user.token,
                 'id' : childrenId,
                 'u' : 'services'
             };
 
-            $scope.remember('children.' + childrenId, function () {
+            if ($scope.user.token) {
+                dataChildren.token = $scope.user.token;
+            }
+
+            $scope.remember('children.memo.' + childrenId, function () {
                 $http.post($rootScope.apiUrl + 'market', dataChildren)
                 .success(function(data) {
                     switch (data.status) {
@@ -32,7 +35,7 @@
                                 });
 
                                 $scope.childrenItems = data.results;
-                                $scope.addRemember('children.' + childrenId, data.results);
+                                $scope.addRemember('children.memo.' + childrenId, data.results);
                             }, 300);
 
                             break;
@@ -42,7 +45,7 @@
                             } else {
                                 $ionicPopup.alert({
                                     title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i>',
-                                    template: data.message,
+                                    template: data.message + ' !',
                                     buttons: [{
                                         text: 'OK',
                                         type: 'button button-full button-zelift'

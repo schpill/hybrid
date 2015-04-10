@@ -101,6 +101,31 @@
             }, failFS);
         };
 
+        self.keys = function (pattern, cb) {
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+                var directoryReader = fileSystem.root.createReader();
+                directoryReader.readEntries(function (entries) {
+                    var i;
+                    var collection = [];
+
+                    pattern = pattern.split('.').join('_');
+
+                    for (i = 0; i < entries.length; i++) {
+                        var entry = entries[i];
+
+                        if (entry.name.match(pattern)) {
+                            collection.push(entry.name.split(".key").join('').split('.').join('_'));
+                            console.log('push collection ' + entry.name.split(".key").join('').split('.').join('_'));
+                        }
+                    }
+
+                    cb(collection);
+                }, function () {
+                    console.log('no directoryReader');
+                });
+            }, failFS);
+        };
+
         return self;
     });
 })();

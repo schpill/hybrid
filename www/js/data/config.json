@@ -1,7 +1,7 @@
 {
     "development": {
         "api": {
-            "url": "http://zelift.inovigroupe.com/api/mobile/data/"
+            "url": "http://www.zelift.com/api/mobile/data/"
         }
     }
 }
