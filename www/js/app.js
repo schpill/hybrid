@@ -65,7 +65,6 @@
                                 utftext += String.fromCharCode(((c >> 6) & 63) | 128);
                                 utftext += String.fromCharCode((c & 63) | 128);
                             }
-
                         }
 
                         return utftext;
@@ -119,9 +118,8 @@
 
 
                     for ( blockstart=0; blockstart<word_array.length; blockstart+=16 ) {
-
-                        for( i=0; i<16; i++ ) W[i] = word_array[blockstart+i];
-                        for( i=16; i<=79; i++ ) W[i] = rotate_left(W[i-3] ^ W[i-8] ^ W[i-14] ^ W[i-16], 1);
+                        for (i=0; i<16; i++) W[i] = word_array[blockstart+i];
+                        for (i=16; i<=79; i++) W[i] = rotate_left(W[i-3] ^ W[i-8] ^ W[i-14] ^ W[i-16], 1);
 
                         A = H0;
                         B = H1;
@@ -129,7 +127,7 @@
                         D = H3;
                         E = H4;
 
-                        for( i= 0; i<=19; i++ ) {
+                        for (i= 0; i<=19; i++) {
                             temp = (rotate_left(A,5) + ((B&C) | (~B&D)) + E + W[i] + 0x5A827999) & 0x0ffffffff;
                             E = D;
                             D = C;
@@ -138,7 +136,7 @@
                             A = temp;
                         }
 
-                        for( i=20; i<=39; i++ ) {
+                        for (i=20; i<=39; i++) {
                             temp = (rotate_left(A,5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff;
                             E = D;
                             D = C;
@@ -147,7 +145,7 @@
                             A = temp;
                         }
 
-                        for( i=40; i<=59; i++ ) {
+                        for (i=40; i<=59; i++) {
                             temp = (rotate_left(A,5) + ((B&C) | (B&D) | (C&D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff;
                             E = D;
                             D = C;
@@ -156,7 +154,7 @@
                             A = temp;
                         }
 
-                        for( i=60; i<=79; i++ ) {
+                        for (i=60; i<=79; i++) {
                             temp = (rotate_left(A,5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff;
                             E = D;
                             D = C;
@@ -322,7 +320,7 @@
 
             $rootScope.show = function (text) {
                 $rootScope.loading = $ionicLoading.show({
-                    template: text ? text : 'Loading',
+                    template: text ? text : 'Chargement...',
                     animation: 'fade-in',
                     showBackdrop: true,
                     maxWidth: 400,

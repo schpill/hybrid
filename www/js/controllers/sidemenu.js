@@ -120,7 +120,7 @@
         self.localize = function () {
             var $scope = self.scope;
 
-            if (navigator.geolocation) {
+            if (typeof navigator.geolocation.getCurrentPosition == 'function') {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     var lat = position.coords.latitude;
                     var lng = position.coords.longitude;
@@ -135,6 +135,7 @@
                     localStorage.setItem('longitude', lng);
                     $scope.isDev = false;
                 }, function (e) {
+                    console.log(e.message);
                     var latitude = 47.324146;
                     var longitude = 5.034246;
 
@@ -163,6 +164,10 @@
 
         self.setScope = function (scope) {
             self.scope = scope;
+        };
+
+        self.now = function () {
+            return Math.floor(Date.now() / 1000);
         };
 
         return self;
@@ -382,6 +387,8 @@
         };
 
         $scope.addRemember = function (name, valueKey) {
+            $scope.store().set('remember.' + name, valueKey);
+
             if ($scope.platformReady) {
                 console.log('add ' + name);
                 var fsys = $scope.zeStore();
@@ -395,6 +402,8 @@
         };
 
         $scope.delRemember = function (name) {
+            $scope.store().del('remember.' + name, valueKey);
+
             if ($scope.platformReady) {
                 console.log('del ' + name);
                 var fsys = $scope.zeStore();
@@ -408,45 +417,63 @@
         };
 
         $scope.remember = function (name, cb1, cb2) {
-            if ($scope.platformReady) {
-                console.log(typeof $scope.db);
-                var fsys = $scope.zeStore();
+            var cache = $scope.store().get('remember.' + name);
 
-                fsys.get('remember.' + name, function (data) {
-                    if (data == 'dummy') {
-                        cb1();
-                    } else {
-                        cb2(data);
-                    }
-                }, 'dummy');
+            if (cache) {
+                console.log("memoCache => " + name);
+                cb2(cache);
             } else {
-                $timeout(function() {
+                if ($scope.platformReady) {
+                    console.log(typeof $scope.db);
                     var fsys = $scope.zeStore();
 
                     fsys.get('remember.' + name, function (data) {
                         if (data == 'dummy') {
                             cb1();
                         } else {
+                            $scope.store().set('remember.' + name, data);
                             cb2(data);
                         }
                     }, 'dummy');
-                }, 500);
+                } else {
+                    $timeout(function() {
+                        var fsys = $scope.zeStore();
+
+                        fsys.get('remember.' + name, function (data) {
+                            if (data == 'dummy') {
+                                cb1();
+                            } else {
+                                $scope.store().set('remember.' + name, data);
+                                cb2(data);
+                            }
+                        }, 'dummy');
+                    }, 500);
+                }
             }
         };
 
         $scope.getRemember = function (name, cb, defaultVal) {
-            var fsys = $scope.zeStore();
-
             if (typeof(defaultVal) == 'undefined') {
                 defaultVal = null;
             }
 
-            fsys.get('remember.' + name, function (data) {
-                cb(data);
-            }, defaultVal);
+            var cache = $scope.store().get('remember.' + name);
+
+            if (cache) {
+                cb(cache);
+            } else {
+                var fsys = $scope.zeStore();
+
+                fsys.get('remember.' + name, function (data) {
+                    $scope.store().set('remember.' + name, data);
+                    cb(data);
+                }, defaultVal);
+            }
         };
 
         $scope.clearCache = function () {
+            $scope.store().delPattern('remember.');
+
             if ($scope.platformReady) {
                 var fsys = $scope.zeStore();
 
@@ -741,29 +768,39 @@
         };
 
         $scope.findDb = function (table_row, id_row, cb) {
-            $http.post($rootScope.apiUrl + 'find', {'table': table_row, 'id': id_row, 'token': $scope.user.token})
-            .success(function(data) {
-                switch (data.status) {
-                    case 200:
-                    console.log('OK find row ' + id_row + ' on ' + table_row);
-                        cb(data.results);
-                        break;
-                    case 500:
-                        $ionicPopup.alert({
-                            title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i>',
-                            template: data.message,
-                            buttons: [{
-                                text: 'OK',
-                                type: 'button button-full button-zelift'
-                            }]
-                        });
-                        break;
-                }
-            })
-            .error(function (data, status) {
-                $log.log($rootScope.apiUrl + 'findDb');
-                $log.log(status);
-            });
+            var keyCache = 'db.find.' + table_row + id_row;
+
+            var cache = $scope.store().get(keyCache);
+
+            if (cache) {
+                console.log('dbCache.' + keyCache);
+                cb(cache);
+            } else {
+                $http.post($rootScope.apiUrl + 'find', {'table': table_row, 'id': id_row, 'token': $scope.user.token})
+                .success(function(data) {
+                    switch (data.status) {
+                        case 200:
+                            console.log('OK find row ' + id_row + ' on ' + table_row);
+                            $scope.store().set(keyCache, data.results);
+                            cb(data.results);
+                            break;
+                        case 500:
+                            $ionicPopup.alert({
+                                title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i>',
+                                template: data.message,
+                                buttons: [{
+                                    text: 'OK',
+                                    type: 'button button-full button-zelift'
+                                }]
+                            });
+                            break;
+                    }
+                })
+                .error(function (data, status) {
+                    $log.log($rootScope.apiUrl + 'findDb');
+                    $log.log(status);
+                });
+            }
         };
 
         $ionicPopover.fromTemplateUrl('templates/right.html', {

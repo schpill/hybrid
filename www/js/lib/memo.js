@@ -49,6 +49,7 @@
 
         self.has = function (key) {
             console.log('memo has ' + key);
+
             return self.get(key, '123dummy') != '123dummy';
         };
 
@@ -60,6 +61,17 @@
                 return true;
             } else {
                 return false;
+            }
+        };
+
+        self.delPattern = function(pattern) {
+            for (var i = 0; i < self.data.length; i++) {
+               var name = self.data.key(i);
+
+                if (name.match(pattern)) {
+                    console.log('memo delPattern ' + name);
+                    delete self.data[name];
+                }
             }
         };
 
