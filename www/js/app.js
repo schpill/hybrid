@@ -205,16 +205,19 @@
                 document.addEventListener("deviceready", function(){
                     $cordovaPush.register(configPush).then(function(result) {
                         console.log('ready for notif');
-                    }, function(err) {
-                        console.log(err);
+                    }, function(e) {
+                        console.log(e);
                     })
                 });
 
-                $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {console.log(notification.event);
+                $rootScope.$on('$cordovaPush:notificationReceived', function(e, notification) {
                     switch(notification.event) {
                         case 'registered':
-                            if (notification.regid.length > 0 ) {
+                            if (notification.regid.length > 0) {
                                 localStorage.setItem('regid', notification.regid);
+                                console.log('regid => ' + notification.regid);
+                            } else {
+                                console.log('regid NOK => ' + notification.regid);
                             }
 
                             break;
@@ -236,17 +239,16 @@
                             }
 
                             if (event == 'message') {
-                                $cordovaBadge.hasPermission().then(function(){
-                                    $cordovaBadge.get(function(currentCount){
-                                        $cordovaDialogs.alert('returned from badge set: ' + currentCount);
+                                $cordovaBadge.hasPermission().then(function() {
+                                    $cordovaBadge.get(function(currentCount) {
                                         $cordovaBadge.set(currentCount + 1);
                                     });
-                                }, function(){
-                                    $cordovaDialogs.alert('not allowed');
+                                }, function() {
+                                    console.log('not allowed to set badge.');
                                 });
 
                                 var media = new Media("http://www.zelift.com/assets/sounds/beep.wav", function () {
-                                    console.log('ca joue');
+                                    console.log('media beep loaded');
                                 }, function (e) {
                                     console.log(e.message);
                                 });

@@ -112,13 +112,15 @@
 
         return self;
     })
-    .factory('global', function ($ionicPlatform, fs) {
+    .factory('global', function ($ionicPlatform, fs, $window) {
         var self = this;
 
         self.scope = {};
 
         self.localize = function () {
             var $scope = self.scope;
+
+            var geoTimeout = ionic.Platform.isAndroid() ? 1000 : 1000;
 
             if (typeof navigator.geolocation.getCurrentPosition == 'function') {
                 navigator.geolocation.getCurrentPosition(function (position) {
@@ -135,30 +137,78 @@
                     localStorage.setItem('longitude', lng);
                     $scope.isDev = false;
                 }, function (e) {
-                    console.log(e.message);
-                    var latitude = 47.324146;
-                    var longitude = 5.034246;
+                    if (geoip2) {
+                        geoip2.city(function (l) {
+                            console.log('geoip');
+                            $scope.loc = l.location;
+                            $scope.traits = l.traits;
+                            console.log(JSON.stringify($scope.loc));
+                            console.log(JSON.stringify($scope.traits));
 
-                    if ($scope.user) {
-                        if ($scope.user.sellzone) {
-                            if ($scope.user.sellzone.latitude) {
-                                latitude = $scope.user.sellzone.latitude;
+                            var lat = l.location.latitude;
+                            var lng = l.location.longitude;
+
+                            console.log('geo true [lng = ' + lng + ',  lat = ' + lat + ']');
+
+                            $scope.position         = {'lng': lng, 'lat': lat};
+                            $scope.user.latitude    = lat;
+                            $scope.user.longitude   = lng;
+
+                            localStorage.setItem('latitude', lat);
+                            localStorage.setItem('longitude', lng);
+                            $scope.isDev = false;
+
+                        }, function (e) {
+                            console.log(e.message);
+                            var latitude = 47.324146;
+                            var longitude = 5.034246;
+
+                            if ($scope.user) {
+                                if ($scope.user.sellzone) {
+                                    if ($scope.user.sellzone.latitude) {
+                                        latitude = $scope.user.sellzone.latitude;
+                                    }
+
+                                    if ($scope.user.sellzone.longitude) {
+                                        longitude = $scope.user.sellzone.longitude;
+                                    }
+                                }
                             }
 
-                            if ($scope.user.sellzone.longitude) {
-                                longitude = $scope.user.sellzone.longitude;
+                            console.log('sellzone coords');
+
+                            $scope.position = {'longitude': longitude, 'latitude': latitude};
+                            $scope.user.latitude    = $scope.position.latitude;
+                            $scope.user.longitude   = $scope.position.longitude;
+                            localStorage.setItem('latitude', $scope.user.latitude);
+                            localStorage.setItem('longitude', $scope.user.longitude);
+                        });
+                    } else {
+                        console.log('no network to localize');
+                        var latitude = 47.324146;
+                        var longitude = 5.034246;
+
+                        if ($scope.user) {
+                            if ($scope.user.sellzone) {
+                                if ($scope.user.sellzone.latitude) {
+                                    latitude = $scope.user.sellzone.latitude;
+                                }
+
+                                if ($scope.user.sellzone.longitude) {
+                                    longitude = $scope.user.sellzone.longitude;
+                                }
                             }
                         }
+
+                        console.log('sellzone coords');
+
+                        $scope.position = {'longitude': longitude, 'latitude': latitude};
+                        $scope.user.latitude    = $scope.position.latitude;
+                        $scope.user.longitude   = $scope.position.longitude;
+                        localStorage.setItem('latitude', $scope.user.latitude);
+                        localStorage.setItem('longitude', $scope.user.longitude);
                     }
-
-                    console.log('sellzone coords');
-
-                    $scope.position = {'longitude': longitude, 'latitude': latitude};
-                    $scope.user.latitude    = $scope.position.latitude;
-                    $scope.user.longitude   = $scope.position.longitude;
-                    localStorage.setItem('latitude', $scope.user.latitude);
-                    localStorage.setItem('longitude', $scope.user.longitude);
-                }, {timeout: 1000, enableHighAccuracy: true});
+                }, {timeout: geoTimeout, enableHighAccuracy: true});
             }
         };
 
