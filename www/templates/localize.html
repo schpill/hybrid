@@ -1,0 +1,24 @@
+﻿<ion-view title="{{viewTitle}}">
+<!--     <ion-nav-buttons side="left">
+        <a ng-click="goBack()" class="button button-clear icon fa fa-arrow-circle-left pull-left fa-2x zeliftColor" href="#"></a>
+    </ion-nav-buttons> -->
+    <ion-nav-buttons side="right">
+        <!-- <a ng-click="shareAnywhere()" class="button button-clear icon ion-android-share-alt fa-2x" href="#"></a> -->
+        <a ng-if="connected === true" class="button button-clear icon ion-android-more-vertical" ng-click="popover.show($event)"></a>
+    </ion-nav-buttons>
+    <ion-content class="has-header padding">
+        <hgroup class="text-center padding-vertical">
+            <h2 class="title">Votre adresse</h2>
+        </hgroup>
+        <p>
+            Nous ne parvenons pas à vous localiser automatiquement.<br>
+            Merci de renseigner votre adresse.
+        </p>
+        <p>
+            <input required style="width: 100%;" class="fieldSearch" placeholder="Chercher un lieu" id="q" ng-model="searchData.query" ng-change="suggest()"><ion-list>
+            <span ng-click="finalizeLoc(item)" ng-if="item.address" class="item item-text-wrap blue" ng-repeat="item in suggestItems">
+                {{showAddress(item.address)}}
+            </span>
+        </p>
+    </ion-content>
+</ion-view>
