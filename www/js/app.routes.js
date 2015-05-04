@@ -156,6 +156,18 @@
                 }
             });
 
+            //**  localize
+            $stateProvider.state('zelift.localize', {
+                url: '/localize',
+                cache: false,
+                views: {
+                    'main': {
+                        templateUrl: 'templates/localize.html',
+                        controller: 'localize'
+                    }
+                }
+            });
+
             //** Default
             $urlRouterProvider.otherwise('/zelift/home');
         });

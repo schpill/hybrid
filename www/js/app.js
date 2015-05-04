@@ -312,12 +312,13 @@
 
             $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
                 $ionicLoading.hide();
+                // console.log(JSON.stringify(toState));
             });
 
             $rootScope.$on('$stateNotFound', function(ev, unfoundState, fromState) {
                 console.log("stateNotFound:");
                 console.log(unfoundState);
-                console.log(fromState);
+                console.log(JSON.stringify(fromState));
             });
 
             $rootScope.show = function (text) {
@@ -334,7 +335,7 @@
                 $ionicLoading.hide();
             };
 
-            $rootScope.notify =function(text){
+            $rootScope.notify =function(text) {
                 $rootScope.show(text);
                 $window.setTimeout(function () {
                     $rootScope.hide();

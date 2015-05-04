@@ -84,7 +84,12 @@
                         <input required name="date" ng-model="dataOffreinform.date" type="date" min="{{offreinform.min_date}}" max="{{offreinform.max_date}}" ng-class="{'item-assertive': form.date.$error.required}">
                     </div>
                     <div class="col">
-                        <input required class="zeliftColor" name="time" ng-model="dataOffreinform.time" type="time" step="900" ng-class="{'item-assertive': form.time.$touched && form.time.$error.required}">
+                        <!-- <input required class="zeliftColor" name="time" ng-model="dataOffreinform.time" type="time" step="900" ng-class="{'item-assertive': form.time.$touched && form.time.$error.required}"> -->
+                        <select name="time_hours" ng-model="dataOffreinform.time_hours">
+                            <option ng-repeat="h in hours" value="{{h}}" ng-selected="h == dataOffreinform.time_hours">{{h}}</option>
+                        </select> h <select name="time_minutes"  ng-model="dataOffreinform.time_minutes">
+                            <option ng-repeat="m in minutes" value="{{m}}" ng-selected="m == dataOffreinform.time_minutes">{{m}}</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -96,7 +101,7 @@
                         Vos adresses
                     </div>
                     <select style="font-size: 66%;" name="address_id" ng-model="dataOffreinform.address_id">
-                        <option ng-repeat="a in addresses" value="{{a.id}}">{{a.content}}</option>
+                        <option ng-repeat="a in addresses" value="{{a.id}}">{{a.name}}</option>
                     </select>
                 </label>
                 <br><span ng-click="addAddress()" class="zeliftColorBox spanBox has-header"><i class="fa fa-plus"></i> Ajouter une adresse</span>

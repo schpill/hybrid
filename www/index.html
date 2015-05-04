@@ -8,11 +8,12 @@
         <!-- Stylesheets -->
         <link href="lib/ionic/css/ionic.css" rel="stylesheet">
         <link href="lib/fontawesome/css/font-awesome.css" rel="stylesheet">
-        <link href="lib/wijmo/styles/wijmo.min.css" rel="stylesheet" />
+        <!-- <link href="lib/wijmo/styles/wijmo.min.css" rel="stylesheet" /> -->
         <link href="css/style.css" rel="stylesheet">
         <link href="css/md.css" rel="stylesheet">
+        <!-- <link href="//www.zelift.com/assets/appli/css/main.css" rel="stylesheet"> -->
 
-        <script src="http://cdn.socket.io/socket.io-1.0.3.js"></script>
+        <script src="lib/requirejs/require.js"></script>
         <script src="lib/jQuery/dist/jquery.js"></script>
         <script src="lib/ionic/js/ionic.bundle.js"></script>
         <script src="lib/ngCordova/dist/ng-cordova.js"></script>
@@ -30,6 +31,9 @@
         <script src="lib/wijmo/interop/angular/wijmo.angular.min.js"></script> -->
 
         <!-- Application Scripts -->
+        <script>
+            var myApp = {};
+        </script>
         <script src="js/configuration.js"></script>
         <script src="js/app.js"></script>
         <script src="js/lib/memo.js"></script>
@@ -52,9 +56,11 @@
         <script src="js/controllers/account.js"></script>
         <script src="js/controllers/myzelift.js"></script>
         <script src="js/controllers/settings.js"></script>
+        <script src="js/controllers/localize.js"></script>
+
         <!-- google maps javascript -->
         <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es&sensor=true"></script>
-        <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="//www.google.com/jsapi"></script>
     </head>
     <body ng-app="zelift">
         <script type="text/javascript" charset="utf-8">
@@ -62,11 +68,10 @@
 
             function onDeviceReady()
             {
-
             }
         </script>
-        <script type="text/javascript" src="http://js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js"></script>
-        <ion-nav-view animation="slide-left-right"></ion-nav-view>
+        <!-- <script type="text/javascript" src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js"></script> -->
+        <ion-nav-view id="mainView" animation="slide-left-right"></ion-nav-view>
     </body>
 </html>
 

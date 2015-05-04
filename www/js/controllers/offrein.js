@@ -37,17 +37,54 @@
             'country':'France'
         };
 
+        function addZero(i)
+        {
+            return i < 10 ? '0' + i : '' + i;
+        }
+
+        var d = new Date;
+
+        var hour = d.getHours();
+        var m = addZero(d.getMinutes());
+
+        var min = parseInt(m);
+
+        var h = min > 52 ? addZero(parseInt(hour + 3)) : addZero(parseInt(hour + 2));
+
+        if (h == '24') {
+            h = '00';
+        } else if (h == '25') {
+            h = '01';
+        }
+
+        if (m == '00' || m == '01' || m == '02' || m == '03' || m == '04' || m == '05' ||  m == '06' || m == '07' || m == '53' || m == '54' || m == '55' || m == '56' || m == '57' || m == '58' || m == '59') {
+            m = '00';
+        } else if (m == '08' || m == '09' || m == '10' || m == '11' || m == '12' || m == '13' ||  m == '14' || m == '15' || m == '16' || m == '17' ||  m == '18' || m == '19' || m == '20' || m == '21' || m == '22') {
+            m = '15';
+        } else if (m == '23' || m == '24' || m == '25' || m == '26' || m == '27' || m == '28' ||  m == '29' || m == '30' || m == '31' || m == '32' ||  m == '33' || m == '34' || m == '35' || m == '36' || m == '37') {
+            m = '30';
+        } else {
+            m = '45';
+        }
+
         $scope.dataOffreinform = {
             'sellzone_id' : $scope.user.sellzone_id,
             'account_id' : $scope.user.id,
             'segment_id' : segmentId,
+            'time_minutes' : m,
+            'time_hours' : h,
             'token' : $scope.user.token,
             'distance_max' : 0,
             'langue' : 'non'
         };
 
+        console.log($scope.dataOffreinform.time_hours);
+
         $scope.qty = 0;
         $scope.qkv = [];
+
+        $scope.minutes = ['00', '15', '30', '45'];
+        $scope.hours = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
 
         $scope.changeListQuantified = function (form) {
             var ind = parseInt(form.ql.$viewValue);

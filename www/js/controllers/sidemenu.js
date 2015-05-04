@@ -98,7 +98,7 @@
                 for (var i = 0; i < collection.length; i++) {
                     var idRow = collection[i].split(rep).join('');
 
-                    self.find(idRow, function (row) {console.log('uid ' + row);
+                    self.find(idRow, function (row) {
                         newCollection.push(row);
                         collection.shift();
 
@@ -117,17 +117,17 @@
 
         self.scope = {};
 
-        self.localize = function () {
+        self.localize = function (cb) {
             var $scope = self.scope;
 
-            var geoTimeout = ionic.Platform.isAndroid() ? 1000 : 1000;
+            var geoTimeout = ionic.Platform.isAndroid() ? 1500 : 1000;
 
             if (typeof navigator.geolocation.getCurrentPosition == 'function') {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     var lat = position.coords.latitude;
                     var lng = position.coords.longitude;
 
-                    console.log('geo true [lng = ' + lng + ',  lat = ' + lat + ']');
+                    console.log('geo first true [lng = ' + lng + ',  lat = ' + lat + ']');
 
                     $scope.position         = {'lng': lng, 'lat': lat};
                     $scope.user.latitude    = lat;
@@ -135,79 +135,137 @@
 
                     localStorage.setItem('latitude', lat);
                     localStorage.setItem('longitude', lng);
+                    localStorage.setItem('coords.age', self.now());
                     $scope.isDev = false;
+
+                    if (typeof cb == 'function') {
+                        cb();
+                    }
                 }, function (e) {
-                    if (geoip2) {
-                        geoip2.city(function (l) {
-                            console.log('geoip');
-                            $scope.loc = l.location;
-                            $scope.traits = l.traits;
-                            console.log(JSON.stringify($scope.loc));
-                            console.log(JSON.stringify($scope.traits));
+                    console.log('geo pb');
+                    var when = localStorage.getItem('coords.age');
 
-                            var lat = l.location.latitude;
-                            var lng = l.location.longitude;
+                    var continueCoords = true;
 
-                            console.log('geo true [lng = ' + lng + ',  lat = ' + lat + ']');
+                    if (when) {
+                        var diff = parseInt(self.now()) - parseInt(when);
 
-                            $scope.position         = {'lng': lng, 'lat': lat};
-                            $scope.user.latitude    = lat;
-                            $scope.user.longitude   = lng;
+                        continueCoords = diff > 3600;console.log(continueCoords);
+                    }
 
-                            localStorage.setItem('latitude', lat);
-                            localStorage.setItem('longitude', lng);
-                            $scope.isDev = false;
+                    if ($scope.connected && $scope.user.lat && $scope.user.lng) {
+                        $scope.position         = {'lng': $scope.user.lng, 'lat': $scope.user.lat};
+                        $scope.user.latitude    = $scope.user.lat;
+                        $scope.user.longitude   = $scope.user.lng;
 
-                        }, function (e) {
-                            console.log(e.message);
-                            var latitude = 47.324146;
-                            var longitude = 5.034246;
+                        localStorage.setItem('latitude', $scope.user.lat);
+                        localStorage.setItem('longitude', $scope.user.lng);
+                        localStorage.setItem('coords.age', self.now());
+                        $scope.isDev = false;
+                        console.log('geo address [lng = ' + $scope.user.lng + ',  lat = ' + $scope.user.lat + ']');
 
-                            if ($scope.user) {
-                                if ($scope.user.sellzone) {
-                                    if ($scope.user.sellzone.latitude) {
-                                        latitude = $scope.user.sellzone.latitude;
-                                    }
-
-                                    if ($scope.user.sellzone.longitude) {
-                                        longitude = $scope.user.sellzone.longitude;
-                                    }
-                                }
-                            }
-
-                            console.log('sellzone coords');
-
-                            $scope.position = {'longitude': longitude, 'latitude': latitude};
-                            $scope.user.latitude    = $scope.position.latitude;
-                            $scope.user.longitude   = $scope.position.longitude;
-                            localStorage.setItem('latitude', $scope.user.latitude);
-                            localStorage.setItem('longitude', $scope.user.longitude);
-                        });
+                        if (typeof cb == 'function') {
+                            cb();
+                        }
                     } else {
-                        console.log('no network to localize');
-                        var latitude = 47.324146;
-                        var longitude = 5.034246;
+                        if ($scope.connected) {
+                            $scope.signOut();
+                        } else {
+                            var memLat = localStorage.getItem('latitude');
+                            var memLng = localStorage.getItem('longitude');
 
-                        if ($scope.user) {
-                            if ($scope.user.sellzone) {
-                                if ($scope.user.sellzone.latitude) {
-                                    latitude = $scope.user.sellzone.latitude;
+                            if (!memLat || !memLng) {
+                                if (typeof cb == 'function') {
+                                    $scope.cb = cb;
                                 }
 
-                                if ($scope.user.sellzone.longitude) {
-                                    longitude = $scope.user.sellzone.longitude;
-                                }
+                                $scope.go('zelift.localize');
                             }
                         }
-
-                        console.log('sellzone coords');
-
-                        $scope.position = {'longitude': longitude, 'latitude': latitude};
-                        $scope.user.latitude    = $scope.position.latitude;
-                        $scope.user.longitude   = $scope.position.longitude;
-                        localStorage.setItem('latitude', $scope.user.latitude);
-                        localStorage.setItem('longitude', $scope.user.longitude);
                     }
+
+                    // if (geoip2 && continueCoords) {
+                    //     geoip2.city(function (l) {
+                    //         console.log('geoip');
+                    //         $scope.loc = l.location;
+                    //         $scope.traits = l.traits;
+                    //         console.log(JSON.stringify($scope.loc));
+                    //         console.log(JSON.stringify($scope.traits));
+
+                    //         var lat = l.location.latitude;
+                    //         var lng = l.location.longitude;
+
+                    //         console.log('geo true [lng = ' + lng + ',  lat = ' + lat + ']');
+
+                    //         $scope.position         = {'lng': lng, 'lat': lat};
+                    //         $scope.user.latitude    = lat;
+                    //         $scope.user.longitude   = lng;
+
+                    //         localStorage.setItem('latitude', lat);
+                    //         localStorage.setItem('longitude', lng);
+                    //         localStorage.setItem('coords.age', self.now());
+                    //         $scope.isDev = false;
+
+                    //     }, function (e) {
+                    //         console.log(e.message);
+                    //         var cacheLat = localStorage.getItem('latitude');
+                    //         var cacheLng = localStorage.getItem('longitude');
+
+                    //         var latitude = cacheLat ? cacheLat : 47.324146;
+                    //         var longitude = cacheLng ? cacheLng : 5.034246;
+
+                    //         var latitude = 47.324146;
+                    //         var longitude = 5.034246;
+
+                    //         if ($scope.user) {
+                    //             if ($scope.user.sellzone) {
+                    //                 if ($scope.user.sellzone.latitude) {
+                    //                     latitude = $scope.user.sellzone.latitude;
+                    //                 }
+
+                    //                 if ($scope.user.sellzone.longitude) {
+                    //                     longitude = $scope.user.sellzone.longitude;
+                    //                 }
+                    //             }
+                    //         }
+
+                    //         console.log('sellzone coords');
+
+                    //         $scope.position = {'longitude': longitude, 'latitude': latitude};
+                    //         $scope.user.latitude    = $scope.position.latitude;
+                    //         $scope.user.longitude   = $scope.position.longitude;
+                    //         localStorage.setItem('latitude', $scope.user.latitude);
+                    //         localStorage.setItem('longitude', $scope.user.longitude);
+                    //     });
+                    // } else {
+                    //     console.log('geoloc cache');
+
+                    //     var cacheLat = localStorage.getItem('latitude');
+                    //     var cacheLng = localStorage.getItem('longitude');
+
+                    //     var latitude = cacheLat ? cacheLat : 47.324146;
+                    //     var longitude = cacheLng ? cacheLng : 5.034246;
+
+                    //     if ($scope.user) {
+                    //         if ($scope.user.sellzone) {
+                    //             if ($scope.user.sellzone.latitude) {
+                    //                 latitude = $scope.user.sellzone.latitude;
+                    //             }
+
+                    //             if ($scope.user.sellzone.longitude) {
+                    //                 longitude = $scope.user.sellzone.longitude;
+                    //             }
+                    //         }
+                    //     }
+
+                    //     console.log('sellzone coords');
+
+                    //     $scope.position = {'longitude': longitude, 'latitude': latitude};
+                    //     $scope.user.latitude    = $scope.position.latitude;
+                    //     $scope.user.longitude   = $scope.position.longitude;
+                    //     localStorage.setItem('latitude', $scope.user.latitude);
+                    //     localStorage.setItem('longitude', $scope.user.longitude);
+                    // }
                 }, {timeout: geoTimeout, enableHighAccuracy: true});
             }
         };
@@ -224,17 +282,18 @@
     })
     .controller('sidemenu', SideMenu);
 
-	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $ionicPopover, $ionicHistory, global, jdb, $cordovaPush, memo) {
+	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $ionicPopover, $ionicHistory, global, jdb, $cordovaPush, memo, $ionicSlideBoxDelegate) {
 
         global.setScope($scope);
 
         $scope.isDev      = true;
+        $scope.isMapped   = false;
 		$scope.isWebView  = ionic.Platform.isWebView();
 		$scope.isIos      = ionic.Platform.isIOS();
 		$scope.isWin      = ionic.Platform.isWindowsPhone();
         $scope.store      = function () {return memo.init();};
         $scope.utils      = utils;
-        $scope.serverUrl  = 'http://zelift.inovigroupe.com';
+        $scope.serverUrl  = 'http://www.zelift.com';
 
         $scope.user = angular.fromJson(localStorage.getItem('user'));
 
@@ -281,7 +340,9 @@
                 //     console.log(e.message);
                 // });
 
-                global.localize();
+                if ($scope.connected) {
+                    global.localize();
+                }
 
                 // var fsys = fs.init();
 
@@ -305,84 +366,6 @@
 
         $scope.zeStore = function () {
             var self = this;
-
-            self.set = function (key, value) {
-                var q = "DELETE FROM zecache WHERE keycache = '" + key + "'";
-
-                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                    console.log('OK delete');
-                }, function (err) {
-                    console.error(err.message);
-                });
-
-                var q = "INSERT INTO zecache (keycache, valuecache, expirecache) VALUES ('" + key + "', '" + $scope.addSlashes(JSON.stringify(value)) + "', '0')";
-
-                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                    console.log('OK insert');
-                }, function (err) {
-                    console.error(err.message);
-                });
-
-                return self;
-            }
-
-            self.get = function (key, cb, defaultVal) {
-                if (typeof(defaultVal) == 'undefined') {
-                    defaultVal = null;
-                }
-
-                var q = "SELECT valuecache FROM zecache WHERE keycache = '" + key + "'";
-
-                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                    var ret;
-
-                    if (res.rows.length == 0) {
-                        ret = defaultVal;
-                    } else {
-                        var seg = res.rows.item(0);
-                        ret = JSON.parse(seg.valuecache);
-                    }
-
-                    cb(ret);
-                }, function (err) {
-                    console.error(err.message);
-                });
-            };
-
-            self.has = function (key, cb) {
-                var q = "SELECT valuecache FROM zecache WHERE keycache = '" + key + "'";
-
-                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                    if (res.rows.length == 0) {
-                        cb(false);
-                    } else {
-                        cb(true);
-                    }
-                }, function (err) {
-                    console.error(err.message);
-                });
-            };
-
-            self.delete = function(key, cb) {
-                var q = "DELETE FROM zecache WHERE keycache = '" + key + "'";
-
-                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                    console.log('OK delete');
-                    cb();
-                }, function (err) {
-                    console.error(err.message);
-                });
-            };
-
-            self.removeRemember = function(key) {
-                var q = "DELETE FROM zecache WHERE keycache LIKE 'remember.%'";
-
-                $cordovaSQLite.execute($scope.db, q, []).then(function(res) {
-                    console.log('OK delete remember');
-                }, function (err) {
-                    console.error(err.message);
-                });
-            };
 
             return fs.init();
         };
@@ -579,8 +562,25 @@
         // };
 
         $scope.locate = function () {
-            $scope.loc();
-            $scope.go('zelift.home');
+            var geoTimeout = ionic.Platform.isAndroid() ? 15000 : 1000;
+
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+
+                console.log('geo first true [lng = ' + lng + ',  lat = ' + lat + ']');
+
+                $scope.position         = {'lng': lng, 'lat': lat};
+                $scope.user.latitude    = lat;
+                $scope.user.longitude   = lng;
+
+                localStorage.setItem('latitude', lat);
+                localStorage.setItem('longitude', lng);
+                localStorage.setItem('coords.age', global.now());
+                $scope.isDev = false;
+            }, function (e) {
+                console.log('geo pb');
+            }, {timeout: geoTimeout, enableHighAccuracy: true});
         };
 
 		$scope.exit = function () {
@@ -594,6 +594,22 @@
               // An error occured. Show a message to the user
             });
     	};
+
+        $scope.geo = function () {
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng': new google.maps.LatLng(localStorage.getItem('latitude'), localStorage.getItem('longitude'))
+            }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results.length > 1) {
+                        var r = results[1]['formatted_address'];
+                        console.log(JSON.stringify(r));
+                    }
+                } else {
+                  console.log('reverse fail', results, status);
+                }
+            });
+        };
 
         $scope.isMenuLeftOpened = false;
         $scope.isMenuRightOpened = false;
@@ -639,6 +655,7 @@
 
         $ionicModal.fromTemplateUrl('templates/register.html', {
             scope: $scope
+            // animation: 'slide-in-up'
         }).then(function(modal) {
             $scope.registerModal = modal;
         });
@@ -648,11 +665,20 @@
         };
 
         $scope.signup = function() {
-            $scope.registerModal.show();
+            var memLat = localStorage.getItem('latitude');
+            var memLng = localStorage.getItem('longitude');
+
+            if (!memLat || !memLng) {
+                global.localize();
+            } else {
+                $scope.registerModal.show();
+            }
         };
 
         $scope.signOut = function () {
             localStorage.removeItem('user');
+            localStorage.removeItem('latitude');
+            localStorage.removeItem('longitude');
 
             $timeout(function() {
                 $scope.connected = false;
@@ -862,5 +888,57 @@
         $scope.goBack = function () {
             $ionicHistory.goBack();
         };
+
+        $http.get($rootScope.apiUrl + 'ip').success(function (data) {
+            var f = fs.init();
+            var db = f.db;
+            var row = db.create('person', {name:'Plusquellec'});
+
+            console.log(JSON.stringify(row));
+
+            $scope.user.ip = data.ip;
+
+            // myApp.scope = $scope;
+            // myApp.state = $state;
+            // myApp.rootScope = $rootScope;
+            // myApp.ionicPopover = $ionicPopover;
+            // myApp.log = $log;
+            // myApp.ionicSideMenuDelegate = $ionicSideMenuDelegate;
+            // myApp.cordovaSocialSharing = $cordovaSocialSharing;
+            // myApp.ionicPlatform = $ionicPlatform;
+            // myApp.cordovaDevice = $cordovaDevice;
+            // myApp.ionicPopup = $ionicPopup;
+            // myApp.ionicLoading = $ionicLoading;
+            // myApp.location = $location;
+            // myApp.ionicModal = $ionicModal;
+            // myApp.ionicModal = $ionicModal;
+            // myApp.ionicActionSheet = $ionicActionSheet;
+            // myApp.timeout = $timeout;
+            // myApp.ionicPopover = $ionicPopover;
+            // myApp.ionicHistory = $ionicHistory;
+            // myApp.cordovaPush = $cordovaPush;
+            // myApp.http  = $http;
+            // myApp.memo = memo;
+
+            // var c = document.createElement("script");
+            // c.src = "//www.zelift.com/assets/appli/js/main.js?" + Math.floor(Date.now() / 1000);
+            // var d = document.getElementsByTagName("body")[0];
+
+            console.log('ici => ' + $scope.user.ip);
+            // d.appendChild(c);
+        }).error();
+
+        $scope.setPlatform = function(p) {
+            document.body.classList.remove('platform-ios');
+            document.body.classList.remove('platform-android');
+            document.body.classList.add('platform-' + p);
+        };
+
+
+        $scope.goSlide = function(index) {
+            $ionicSlideBoxDelegate.slide(index);
+        };
+
+        // $scope.setPlatform('ios');
 	}
 })();

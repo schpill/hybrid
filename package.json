@@ -28,7 +28,10 @@
     "com.phonegap.plugins.barcodescanner",
     "https://github.com/katzer/cordova-plugin-badge.git",
     "org.apache.cordova.geolocation",
-    "org.apache.cordova.splashscreen"
+    "org.apache.cordova.splashscreen",
+    "https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
+    "https://github.com/phonegap-build/PushPlugin.git",
+    "https://github.com/VitaliiBlagodir/cordova-plugin-datepicker"
   ],
   "cordovaPlatforms": [
     "android"
