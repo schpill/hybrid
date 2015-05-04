@@ -1,6 +1,8 @@
 ﻿<ion-view title="{{viewTitle}}">
+    <ion-nav-back-button></ion-nav-back-button>
     <ion-nav-buttons side="left">
-        <button class="button button-clear button-icon icon ion-navicon" menu-toggle="left"></button>
+        <button id="naviconBtn" class="homeBtnNav button button-clear button-icon icon ion-navicon" ng-click="showDrawer()"></button>
+        <button class="homeBtnBack hide button button-clear button-icon icon ion-arrow-left-c" ng-click="showDrawer()"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
         <!-- <a ng-click="shareAnywhere()" class="button button-clear icon ion-android-share-alt fa-2x" href="#"></a> -->

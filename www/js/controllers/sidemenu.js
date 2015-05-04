@@ -926,7 +926,9 @@
 
             console.log('ici => ' + $scope.user.ip);
             // d.appendChild(c);
-        }).error();
+        }).error(function () {
+            console.log('PB => ' + $rootScope.apiUrl + 'ip');
+        });
 
         $scope.setPlatform = function(p) {
             document.body.classList.remove('platform-ios');
@@ -937,6 +939,48 @@
 
         $scope.goSlide = function(index) {
             $ionicSlideBoxDelegate.slide(index);
+        };
+
+        $scope.showDrawer = function() {
+            if ($('.drawer').is(":visible")) {
+                $('#appView').css({"opacity":1, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
+                $(".drawer").animate({width:'toggle'}, 150);
+                $('#naviconBtn').removeClass('ion-arrow-left-c');
+                $('#naviconBtn').addClass('ion-navicon');
+                $('.homeBtnNav').show();
+                $('.homeBtnBack').hide();
+                $scope.openedDrawer = false;
+            } else {
+                $('#appView').css({"opacity":0.3, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
+                $('#naviconBtn').removeClass('ion-navicon');
+                $('#naviconBtn').addClass('ion-arrow-left-c');
+                console.log('ca change');
+                $(".drawer").animate({width:'toggle'}, 150);
+                $('.homeBtnNav').hide();
+                $('.homeBtnBack').show();
+
+                $timeout(function () {
+                    $scope.openedDrawer = true;
+                }, 100);
+            }
+        };
+
+        $scope.closeDrawerClickingElsewhere = function (event) {
+            $('#appView').css({"opacity":1, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
+            $(".drawer").animate({width:'toggle'}, 150);
+            $('#naviconBtn').removeClass('ion-arrow-left-c');
+            $('#naviconBtn').addClass('ion-navicon');
+            $('.homeBtnNav').show();
+            $('.homeBtnBack').hide();
+            $scope.openedDrawer = false;
+        };
+
+        $window.onclick = function (event) {
+            if ($scope.openedDrawer) {
+                $scope.closeDrawerClickingElsewhere(event);
+            } else {
+                return true;
+            }
         };
 
         // $scope.setPlatform('ios');

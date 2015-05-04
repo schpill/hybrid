@@ -3,12 +3,12 @@
 
 	angular
 		.module('zelift')
-		.config(function ($stateProvider, $urlRouterProvider) {
+		.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
             //** abstract route for sidemenu
             $stateProvider.state('zelift', {
                 url: '/zelift',
                 abstract: true,
-                templateUrl: 'templates/sidemenu.html',
+                templateUrl: 'templates/app.html',
                 controller: 'sidemenu'
             });
 
@@ -17,7 +17,7 @@
                 url: '/home',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/home.html',
                         controller: 'home'
                     }
@@ -29,7 +29,7 @@
                 url: '/search',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/search.html',
                         controller: 'search'
                     }
@@ -41,7 +41,7 @@
                 url: '/services',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/services.html',
                         controller: 'services'
                     }
@@ -53,7 +53,7 @@
                 url: '/children/:childrenId',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/children.html',
                         controller: 'children'
                     }
@@ -65,7 +65,7 @@
                 url: '/offrein/:segmentId',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/offrein.html',
                         controller: 'offrein'
                     }
@@ -77,7 +77,7 @@
                 url: '/offreout',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/offreout.html',
                         controller: 'offreout'
                     }
@@ -89,7 +89,7 @@
                 url: '/map',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/map.html',
                         controller: 'map'
                     }
@@ -101,7 +101,7 @@
                 url: '/about',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/about.html',
                         controller: 'about'
                     }
@@ -113,7 +113,7 @@
                 url: '/myoffers',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/myoffers.html',
                         controller: 'myoffers'
                     }
@@ -125,7 +125,7 @@
                 url: '/account',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/account.html',
                         controller: 'account'
                     }
@@ -137,7 +137,7 @@
                 url: '/myzelift',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/myzelift.html',
                         controller: 'myzelift'
                     }
@@ -149,7 +149,7 @@
                 url: '/settings',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/settings.html',
                         controller: 'settings'
                     }
@@ -161,7 +161,7 @@
                 url: '/localize',
                 cache: false,
                 views: {
-                    'main': {
+                    'appView': {
                         templateUrl: 'templates/localize.html',
                         controller: 'localize'
                     }
@@ -170,5 +170,6 @@
 
             //** Default
             $urlRouterProvider.otherwise('/zelift/home');
+            $ionicConfigProvider.navBar.alignTitle('center');
         });
 })();
