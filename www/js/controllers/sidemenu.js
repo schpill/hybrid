@@ -282,7 +282,7 @@
     })
     .controller('sidemenu', SideMenu);
 
-	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $ionicPopover, $ionicHistory, global, jdb, $cordovaPush, memo, $ionicSlideBoxDelegate) {
+	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $ionicPopover, $ionicHistory, global, jdb, $cordovaPush, memo, $ionicSlideBoxDelegate, $ionicGesture) {
 
         global.setScope($scope);
 
@@ -943,21 +943,28 @@
 
         $scope.showDrawer = function() {
             if ($('.drawer').is(":visible")) {
-                $('#appView').css({"opacity":1, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
+                // $('#appView').css({"opacity":1, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
+
+                $(".loadDiv").animate({width:'toggle'}, 150);
                 $(".drawer").animate({width:'toggle'}, 150);
+
                 $('#naviconBtn').removeClass('ion-arrow-left-c');
                 $('#naviconBtn').addClass('ion-navicon');
+
                 $('.homeBtnNav').show();
                 $('.homeBtnBack').hide();
                 $scope.openedDrawer = false;
             } else {
-                $('#appView').css({"opacity":0.3, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
+                // $('#appView').css({"opacity":0.3, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
+
                 $('#naviconBtn').removeClass('ion-navicon');
                 $('#naviconBtn').addClass('ion-arrow-left-c');
-                console.log('ca change');
+
                 $(".drawer").animate({width:'toggle'}, 150);
+
                 $('.homeBtnNav').hide();
                 $('.homeBtnBack').show();
+                $(".loadDiv").animate({width:'toggle'}, 150);
 
                 $timeout(function () {
                     $scope.openedDrawer = true;
@@ -965,24 +972,53 @@
             }
         };
 
-        $scope.closeDrawerClickingElsewhere = function (event) {
-            $('#appView').css({"opacity":1, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
-            $(".drawer").animate({width:'toggle'}, 150);
-            $('#naviconBtn').removeClass('ion-arrow-left-c');
-            $('#naviconBtn').addClass('ion-navicon');
-            $('.homeBtnNav').show();
-            $('.homeBtnBack').hide();
-            $scope.openedDrawer = false;
-        };
-
         $window.onclick = function (event) {
             if ($scope.openedDrawer) {
-                $scope.closeDrawerClickingElsewhere(event);
+                var target = $(event.target);
+
+                if (!target.hasClass("drawer")) {
+                    $(".loadDiv").animate({width:'toggle'}, 150);
+                    $(".drawer").animate({width:'toggle'}, 150);
+
+                    $('#naviconBtn').removeClass('ion-arrow-left-c');
+                    $('#naviconBtn').addClass('ion-navicon');
+
+                    $('.homeBtnNav').show();
+                    $('.homeBtnBack').hide();
+                    $scope.openedDrawer = false;
+                }
             } else {
                 return true;
             }
         };
 
+        $scope.testSwipe = function () {
+            alert('cool');
+        };
+
         // $scope.setPlatform('ios');
+
+        if ($('body').hasClass('platform-ios')) {
+            $(".drawer").css({'top': '64px'});
+        }
+
+        var element = angular.element(document.querySelector('#appView'));
+
+        $ionicGesture.on('dragright', function (event) {
+            $scope.$apply(function () {
+                if (!$scope.openedDrawer) {
+                    $('#naviconBtn').removeClass('ion-navicon');
+                    $('#naviconBtn').addClass('ion-arrow-left-c');
+
+                    $(".drawer").animate({width:'toggle'}, 150);
+
+                    $('.homeBtnNav').hide();
+                    $('.homeBtnBack').show();
+                    $(".loadDiv").animate({width:'toggle'}, 150);
+
+                    $scope.openedDrawer = true;
+                }
+            });
+        }, element);
 	}
 })();
