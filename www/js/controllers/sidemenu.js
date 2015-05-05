@@ -992,14 +992,11 @@
             }
         };
 
-        $scope.testSwipe = function () {
-            alert('cool');
-        };
-
         // $scope.setPlatform('ios');
 
         if ($('body').hasClass('platform-ios')) {
-            $(".drawer").css({'top': '64px'});
+            // $(".drawer").css({'top': '64px'});
+            $('body').addClass('fullscreen')
         }
 
         var element = angular.element(document.querySelector('#appView'));
