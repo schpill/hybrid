@@ -1017,5 +1017,23 @@
                 }
             });
         }, element);
+
+        var element = angular.element(document.querySelector('.loadDiv'));
+        $ionicGesture.on('dragleft', function (event) {
+            $scope.$apply(function () {
+                if ($scope.openedDrawer) {
+                    $(".loadDiv").animate({width:'toggle'}, 150);
+                    $(".drawer").animate({width:'toggle'}, 150);
+
+                    $('#naviconBtn').removeClass('ion-arrow-left-c');
+                    $('#naviconBtn').addClass('ion-navicon');
+
+                    $('.homeBtnNav').show();
+                    $('.homeBtnBack').hide();
+                    $('#appView').css({"opacity":1, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
+                    $scope.openedDrawer = false;
+                }
+            });
+        }, element);
 	}
 })();

@@ -1,2 +1,42 @@
+<div class="drawer">
+    <ion-list>
+        <ion-item class="item item-icon-left" href="#/zelift/home" menu-close>
+            <i class="icon fa fa-home fa-ionicon zeliftColor"></i>
+            Accueil
+        </ion-item>
+        <ion-item class="item item-icon-left" href="#/zelift/search" menu-close>
+            <i class="icon ion-ios-search fa-ionicon zeliftColor"></i>
+            Rechercher un service
+        </ion-item>
+        <ion-item class="item item-icon-left" href="#/zelift/services" menu-close>
+            <i class="icon ion-eye fa-ionicon zeliftColor"></i>
+            Parcourir les services
+        </ion-item>
+        <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/account" menu-close>
+            <i class="icon ion-android-person fa-ionicon zeliftColor"></i>
+            Mon compte
+        </ion-item>
+        <ion-item class="item item-icon-left" ng-if="connected === false" ng-click="signup()" menu-close>
+            <i class="icon fa fa-plus fa-ionicon zeliftColor"></i>
+            S'inscrire
+        </ion-item>
+        <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/myoffers" menu-close>
+            <i class="icon ion-ios-cart fa-ionicon zeliftColor"></i>
+            Mes commandes
+        </ion-item>
+        <ion-item class="item item-icon-left" ng-if="connected === true" href="#/zelift/settings" menu-close>
+            <i class="icon fa fa-cogs fa-ionicon zeliftColor"></i>
+            Paramètres
+        </ion-item>
+        <ion-item class="item item-icon-left" href="#/zelift/map" menu-close>
+            <i class="icon fa fa-globe fa-ionicon zeliftColor"></i>
+            Carte
+        </ion-item>
+        <ion-item class="item item-icon-left" href="#/zelift/about" menu-close>
+            <i class="icon ion-help-circled fa-ionicon zeliftColor"></i>
+            &Agrave; propos
+        </ion-item>
+    </ion-list>
+</div>
 <div class="loadDiv hide"></div>
 <ion-nav-view name="appView" id="appView" animation="slide-left-right"></ion-nav-view>
