@@ -1,6 +1,12 @@
 (function () {
     'use strict';
 
+    function e(t) {
+        t = typeof t == 'object' ? JSON.stringify(t) : t;
+
+        console.log(t);
+    }
+
     /**
      * Define the main application module.
      */
@@ -355,7 +361,7 @@
             };
         }])
 
-        .config(['$httpProvider', function ($httpProvider) {
+        .config(['$httpProvider', '$ionicConfigProvider', function ($httpProvider, $ionicConfigProvider) {
             $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
         }])
 })();

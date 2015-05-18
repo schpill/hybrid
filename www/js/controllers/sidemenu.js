@@ -357,6 +357,7 @@
                 // $scope.zeStore().get('trucs', function (res) {
                 //     console.log(res[0]);
                 // }, 25);
+                $log.log('ovo');
             });
         }
 
@@ -995,45 +996,45 @@
         // $scope.setPlatform('ios');
 
         if ($('body').hasClass('platform-ios')) {
-            // $(".drawer").css({'top': '64px'});
             $('body').addClass('fullscreen')
         }
 
-        var element = angular.element(document.querySelector('#appView'));
+        // var element = angular.element(document.querySelector('#appView'));
 
-        $ionicGesture.on('dragright', function (event) {
-            $scope.$apply(function () {
-                if (!$scope.openedDrawer) {
-                    $('#naviconBtn').removeClass('ion-navicon');
-                    $('#naviconBtn').addClass('ion-arrow-left-c');
+        // $ionicGesture.on('dragright', function (event) {
+        //     $scope.$apply(function () {
+        //         if (!$scope.openedDrawer) {
+        //             $('#naviconBtn').removeClass('ion-navicon');
+        //             $('#naviconBtn').addClass('ion-arrow-left-c');
 
-                    $(".drawer").animate({width:'toggle'}, 150);
+        //             $(".drawer").animate({width:'toggle'}, 150);
 
-                    $('.homeBtnNav').hide();
-                    $('.homeBtnBack').show();
-                    $(".loadDiv").animate({width:'toggle'}, 150);
+        //             $('.homeBtnNav').hide();
+        //             $('.homeBtnBack').show();
+        //             $(".loadDiv").animate({width:'toggle'}, 150);
 
-                    $scope.openedDrawer = true;
-                }
-            });
-        }, element);
+        //             $scope.openedDrawer = true;
+        //         }
+        //     });
+        // }, element);
 
-        var element = angular.element(document.querySelector('.loadDiv'));
-        $ionicGesture.on('dragleft', function (event) {
-            $scope.$apply(function () {
-                if ($scope.openedDrawer) {
-                    $(".loadDiv").animate({width:'toggle'}, 150);
-                    $(".drawer").animate({width:'toggle'}, 150);
+        // var element = angular.element(document.querySelector('.loadDiv'));
 
-                    $('#naviconBtn').removeClass('ion-arrow-left-c');
-                    $('#naviconBtn').addClass('ion-navicon');
+        // $ionicGesture.on('dragleft', function (event) {
+        //     $scope.$apply(function () {
+        //         if ($scope.openedDrawer) {
+        //             $(".loadDiv").animate({width:'toggle'}, 150);
+        //             $(".drawer").animate({width:'toggle'}, 150);
 
-                    $('.homeBtnNav').show();
-                    $('.homeBtnBack').hide();
-                    $('#appView').css({"opacity":1, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
-                    $scope.openedDrawer = false;
-                }
-            });
-        }, element);
+        //             $('#naviconBtn').removeClass('ion-arrow-left-c');
+        //             $('#naviconBtn').addClass('ion-navicon');
+
+        //             $('.homeBtnNav').show();
+        //             $('.homeBtnBack').hide();
+        //             $('#appView').css({"opacity":1, '-webkit-transition':'opacity 150ms ease-in-out', 'transition':'opacity 150ms ease-in-out'});
+        //             $scope.openedDrawer = false;
+        //         }
+        //     });
+        // }, element);
 	}
 })();

@@ -7,7 +7,7 @@
         <!-- <a ng-click="shareAnywhere()" class="button button-clear icon ion-android-share-alt fa-2x" href="#"></a> -->
         <a ng-if="connected === true" class="button button-clear icon ion-android-more-vertical" ng-click="popover.show($event)"></a>
     </ion-nav-buttons>
-    <ion-content class="has-header padding">
+    <ion-content class="has-header padding" overflow-scroll=”true”f>
         <ion-list>
             <a ng-if="item.id != 413" ng-href="{{getItemUrl(item)}}" class="item item-thumbnail-left item-text-wrap" ng-repeat="item in servicesItems">
                 <img ng-if="item.img.length > 0" src="{{serverUrl}}{{item.img}}" />
