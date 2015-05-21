@@ -1,4 +1,11 @@
 {
   "name": "zeliftApp",
-  "app_id": "068b0a95"
+  "app_id": "068b0a95",
+  "browsers": [
+    {
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "12.41.296.5"
+    }
+  ]
 }

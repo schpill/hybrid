@@ -31,7 +31,30 @@
     "org.apache.cordova.splashscreen",
     "https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
     "https://github.com/phonegap-build/PushPlugin.git",
-    "https://github.com/VitaliiBlagodir/cordova-plugin-datepicker"
+    "https://github.com/VitaliiBlagodir/cordova-plugin-datepicker",
+    "cordova-plugin-whitelist",
+    {
+      "locator": "https://github.com/EddyVerbruggen/LaunchMyApp-PhoneGap-Plugin.git",
+      "id": "nl.x-services.plugins.launchmyapp"
+    },
+    "cordova-plugin-network-information",
+    "com.danielcwilson.plugins.googleanalytics",
+    "nl.x-services.plugins.calendar",
+    "de.appplant.cordova.plugin.email-composer",
+    "cordova-plugin-device",
+    "cordova-plugin-camera",
+    "cordova-plugin-file",
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-inappbrowser",
+    "cordova-plugin-console",
+    "cordova-plugin-statusbar",
+    "cordova-plugin-dialogs",
+    "cordova-plugin-media",
+    {
+      "locator": "https://github.com/katzer/cordova-plugin-badge.git",
+      "id": "de.appplant.cordova.plugin.badge"
+    },
+    "cordova-plugin-geolocation"
   ],
   "cordovaPlatforms": [
     "android"
