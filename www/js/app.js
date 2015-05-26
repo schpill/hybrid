@@ -181,7 +181,8 @@
             };
         })
         .run(function ($window, $ionicPlatform, $ionicLoading, $rootScope, $http, $cordovaPush, $cordovaDialogs, $ionicPopup, $cordovaBadge) {
-            $('#testinput').trigger("click");
+            $('#regName').focus();
+
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs).

@@ -15,7 +15,7 @@
                 </label>
 
                 <label class="item item-input item-large" ng-class="{'item-assertive': register.name.$touched && register.name.$error.required}">
-                    <input type="text" placeholder="Nom" name="name" ng-model="signupData.name" required>
+                    <input id="regName" type="text" placeholder="Nom" name="name" ng-model="signupData.name" required>
                 </label>
 
                 <label class="item item-input item-large" ng-class="{'item-assertive': register.firstname.$touched && register.firstname.$error.required}">
