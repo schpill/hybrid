@@ -5,7 +5,7 @@
 
     if (iOS) {
         document.onreadystatechange = function () {
-            e(document.readyState);
+            console.log(document.readyState);
 
             if (document.readyState == "complete") {
                 document.body.classList.add('platform-ready');
