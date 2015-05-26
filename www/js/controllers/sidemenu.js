@@ -143,46 +143,47 @@
                     }
                 }, function (e) {
                     console.log('geo pb');
-                    var when = localStorage.getItem('coords.age');
+                    $scope.go('zelift.localize');
+                    // var when = localStorage.getItem('coords.age');
 
-                    var continueCoords = true;
+                    // var continueCoords = true;
 
-                    if (when) {
-                        var diff = parseInt(self.now()) - parseInt(when);
+                    // if (when) {
+                    //     var diff = parseInt(self.now()) - parseInt(when);
 
-                        continueCoords = diff > 3600;console.log(continueCoords);
-                    }
+                    //     continueCoords = diff > 3600;console.log(continueCoords);
+                    // }
 
-                    if ($scope.connected && $scope.user.lat && $scope.user.lng) {
-                        $scope.position         = {'lng': $scope.user.lng, 'lat': $scope.user.lat};
-                        $scope.user.latitude    = $scope.user.lat;
-                        $scope.user.longitude   = $scope.user.lng;
+                    // if ($scope.connected && $scope.user.lat && $scope.user.lng) {
+                    //     $scope.position         = {'lng': $scope.user.lng, 'lat': $scope.user.lat};
+                    //     $scope.user.latitude    = $scope.user.lat;
+                    //     $scope.user.longitude   = $scope.user.lng;
 
-                        localStorage.setItem('latitude', $scope.user.lat);
-                        localStorage.setItem('longitude', $scope.user.lng);
-                        localStorage.setItem('coords.age', self.now());
-                        $scope.isDev = false;
-                        console.log('geo address [lng = ' + $scope.user.lng + ',  lat = ' + $scope.user.lat + ']');
+                    //     localStorage.setItem('latitude', $scope.user.lat);
+                    //     localStorage.setItem('longitude', $scope.user.lng);
+                    //     localStorage.setItem('coords.age', self.now());
+                    //     $scope.isDev = false;
+                    //     console.log('geo address [lng = ' + $scope.user.lng + ',  lat = ' + $scope.user.lat + ']');
 
-                        if (typeof cb == 'function') {
-                            cb();
-                        }
-                    } else {
-                        if ($scope.connected) {
-                            $scope.signOut();
-                        } else {
-                            var memLat = localStorage.getItem('latitude');
-                            var memLng = localStorage.getItem('longitude');
+                    //     if (typeof cb == 'function') {
+                    //         cb();
+                    //     }
+                    // } else {
+                    //     if ($scope.connected) {
+                    //         $scope.signOut();
+                    //     } else {
+                    //         var memLat = localStorage.getItem('latitude');
+                    //         var memLng = localStorage.getItem('longitude');
 
-                            if (!memLat || !memLng) {
-                                if (typeof cb == 'function') {
-                                    $scope.cb = cb;
-                                }
+                    //         if (!memLat || !memLng) {
+                    //             if (typeof cb == 'function') {
+                    //                 $scope.cb = cb;
+                    //             }
 
-                                $scope.go('zelift.localize');
-                            }
-                        }
-                    }
+                    //             $scope.go('zelift.localize');
+                    //         }
+                    //     }
+                    // }
 
                     // if (geoip2 && continueCoords) {
                     //     geoip2.city(function (l) {
