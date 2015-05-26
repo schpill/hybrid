@@ -365,7 +365,7 @@
                     $scope.user.version     = $cordovaDevice.getVersion();
                 }
 
-                $scope.user.uuid        = $rootScope.uuid;
+                $scope.user.uuid            = $rootScope.uuid;
 
                 // var myDb = jdb.init('core', 'test');
 
