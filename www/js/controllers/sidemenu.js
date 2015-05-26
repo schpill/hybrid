@@ -357,7 +357,6 @@
                 // $scope.zeStore().get('trucs', function (res) {
                 //     console.log(res[0]);
                 // }, 25);
-                $log.log('ovo');
             });
         }
 

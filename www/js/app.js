@@ -61,12 +61,10 @@
 
                             if (c < 128) {
                                 utftext += String.fromCharCode(c);
-                            }
-                            else if((c > 127) && (c < 2048)) {
+                            } else if ((c > 127) && (c < 2048)) {
                                 utftext += String.fromCharCode((c >> 6) | 192);
                                 utftext += String.fromCharCode((c & 63) | 128);
-                            }
-                            else {
+                            } else {
                                 utftext += String.fromCharCode((c >> 12) | 224);
                                 utftext += String.fromCharCode(((c >> 6) & 63) | 128);
                                 utftext += String.fromCharCode((c & 63) | 128);
@@ -212,6 +210,7 @@
                     $cordovaPush.register(configPush).then(function(result) {
                         console.log('ready for notif');
                     }, function(e) {
+                        console.log('not ready for notif');
                         console.log(e);
                     })
                 });
