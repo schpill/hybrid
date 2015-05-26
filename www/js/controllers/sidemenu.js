@@ -356,6 +356,10 @@
 
         console.log(uuid);
 
+        document.addEventListener("deviceready", function() {
+            console.log('ca passe');
+        });
+
         if (window.cordova) {
             $ionicPlatform.ready(function () {
                 $scope.platformReady = true;
@@ -398,20 +402,6 @@
                 if ($scope.connected) {
                     global.localize();
                 }
-
-                // var fsys = fs.init();
-
-                // fsys.set('c.l', 'test cache');
-
-                // fsys.get('c.l', function (data) {console.log(data);
-                //     $scope.test = data;
-                // }, '250');
-
-                // $scope.zeStore().set('trucs', ['a',5,4]);
-
-                // $scope.zeStore().get('trucs', function (res) {
-                //     console.log(res[0]);
-                // }, 25);
             });
         }
 
