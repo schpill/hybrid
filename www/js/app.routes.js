@@ -1,6 +1,20 @@
 (function() {
     'use strict';
 
+    var iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
+
+    if (iOS) {
+        document.onreadystatechange = function () {
+            e(document.readyState);
+
+            if (document.readyState == "complete") {
+                document.body.classList.add('platform-ready');
+                document.body.classList.add('platform-ios');
+                document.body.classList.add('fullscreen');
+            }
+        }
+    }
+
 	angular
 		.module('zelift')
 		.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
