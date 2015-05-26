@@ -1,5 +1,5 @@
 ﻿// Ion.RangeSlider
-// version 2.0.6 Build: 300
+// version 2.0.7 Build: 315
 // © Denis Ineshin, 2015
 // https://github.com/IonDen
 //
@@ -139,11 +139,12 @@
     // Core
 
     var IonRangeSlider = function (input, options, plugin_count) {
-        this.VERSION = "2.0.6";
+        this.VERSION = "2.0.7";
         this.input = input;
         this.plugin_count = plugin_count;
         this.current_plugin = 0;
         this.calc_count = 0;
+        this.update_tm = 0;
         this.old_from = 0;
         this.old_to = 0;
         this.raf_id = null;
@@ -413,7 +414,6 @@
             }
 
             this.updateScene();
-            this.raf_id = requestAnimationFrame(this.updateScene.bind(this));
         },
 
         append: function () {
@@ -580,6 +580,8 @@
             if (is_old_ie) {
                 $("*").prop("unselectable", false);
             }
+
+            this.updateScene();
         },
 
         pointerDown: function (target, e) {
@@ -629,6 +631,8 @@
             }
 
             this.$cache.line.trigger("focus");
+
+            this.updateScene();
         },
 
         pointerClick: function (target, e) {
@@ -825,6 +829,10 @@
                     break;
 
                 case "both":
+                    if (this.options.from_fixed || this.options.to_fixed) {
+                        break;
+                    }
+
                     real_x = this.toFixed(real_x + (this.coords.p_handle * 0.1));
 
                     this.coords.p_from_real = this.calcWithStep((real_x - this.coords.p_gap_left) / real_width * 100);
@@ -888,9 +896,9 @@
             } else {
                 var m_point = this.coords.p_from_real + ((this.coords.p_to_real - this.coords.p_from_real) / 2);
                 if (real_x >= m_point) {
-                    return "to";
+                    return this.options.to_fixed ? "from" : "to";
                 } else {
-                    return "from";
+                    return this.options.from_fixed ? "to" : "from";
                 }
             }
         },
@@ -945,13 +953,25 @@
         // Drawings
 
         updateScene: function () {
+            if (this.raf_id) {
+                cancelAnimationFrame(this.raf_id);
+                this.raf_id = null;
+            }
+
+            clearTimeout(this.update_tm);
+            this.update_tm = null;
+
             if (!this.options) {
                 return;
             }
 
             this.drawHandles();
 
-            this.raf_id = requestAnimationFrame(this.updateScene.bind(this));
+            if (this.is_active) {
+                this.raf_id = requestAnimationFrame(this.updateScene.bind(this));
+            } else {
+                this.update_tm = setTimeout(this.updateScene.bind(this), 300);
+            }
         },
 
         drawHandles: function () {
@@ -1726,15 +1746,15 @@
             }
 
             if (this.options.force_edges) {
-                if (start[0] < this.coords.grid_gap) {
-                    start[0] = this.coords.grid_gap;
+                if (start[0] < -this.coords.grid_gap) {
+                    start[0] = -this.coords.grid_gap;
                     finish[0] = this.toFixed(start[0] + this.coords.big_p[0]);
 
                     this.coords.big_x[0] = this.coords.grid_gap;
                 }
 
-                if (finish[num - 1] > 100 - this.coords.grid_gap) {
-                    finish[num - 1] = 100 - this.coords.grid_gap;
+                if (finish[num - 1] > 100 + this.coords.grid_gap) {
+                    finish[num - 1] = 100 + this.coords.grid_gap;
                     start[num - 1] = this.toFixed(finish[num - 1] - this.coords.big_p[num - 1]);
 
                     this.coords.big_x[num - 1] = this.toFixed(this.coords.big_p[num - 1] - this.coords.grid_gap);
