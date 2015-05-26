@@ -5,6 +5,6 @@
     "jQuery": "~2.1.1",
     "ionic-rating": "master",
     "fontawesome": "~4.3.0",
-    "ionic": "driftyco/ionic-bower#1.0.0-beta.14"
+    "ionic": "driftyco/ionic-bower#master"
   }
 }
