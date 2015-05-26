@@ -998,6 +998,14 @@
             $('body').addClass('fullscreen')
         }
 
+        var element = angular.element(document.querySelector('#appView'));
+
+        $ionicGesture.on('dragright', function (event) {
+            if (event.gesture.touches[0].pageX < 30 && can) {
+                $scope.showDrawer();
+            }
+        }, element);
+
         // var element = angular.element(document.querySelector('#appView'));
 
         // $ionicGesture.on('dragright', function (event) {
