@@ -280,10 +280,49 @@
 
         return self;
     })
+
+    .factory('ls', function($window) {
+        return {
+            set: function(key, value) {
+                $window.localStorage.setItem(key, value);
+            },
+
+            get: function(key) {
+                defaultValue = typeof defaultValue == 'undefined' ? null : defaultValue;
+
+                var val = $window.localStorage.getItem(key);
+
+                if (!val) {
+                    val = defaultValue;
+                }
+
+                return val;
+            },
+
+            setObject: function(key, value) {
+                $window.localStorage.setItem(key, JSON.stringify(value));
+            },
+
+            getObject: function(key, defaultValue) {
+                defaultValue = typeof defaultValue == 'undefined' ? '{}' : defaultValue;
+                var val = $window.localStorage.getItem(key);
+
+                if (!val) {
+                    val = defaultValue;
+                }
+
+                return typeof val == 'string' && val.match('{') ? JSON.parse(val) : val;
+            },
+
+            removeItem: function(key) {
+                $window.localStorage.removeItem(key);
+            }
+        }
+    })
+
     .controller('sidemenu', SideMenu);
 
-	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $ionicPopover, $ionicHistory, global, jdb, $cordovaPush, memo, $ionicSlideBoxDelegate, $ionicGesture) {
-
+	function SideMenu($state, $scope, $rootScope, $ionicSideMenuDelegate, $cordovaSocialSharing, utils, store, $ionicPlatform, cache, fs, $cordovaDevice, $ionicPopup, $ionicLoading, $window, $http, $location, $ionicModal, $ionicActionSheet, $timeout, $log, $ionicPopover, $ionicHistory, global, jdb, $cordovaPush, memo, $ionicSlideBoxDelegate, $ionicGesture, UUID, ls) {
         global.setScope($scope);
 
         $scope.isDev      = true;
@@ -305,13 +344,28 @@
 
         $scope.platformReady = false;
 
+        var uuid = ls.get('myUuid');
+
+        uuid = uuid ? uuid : UUID.make();
+        var device = device ? device : null;
+
+        ls.set('myUuid', uuid);
+
+        $rootScope.uuid = uuid;
+
+        console.log(uuid);
+
         if (window.cordova) {
             $ionicPlatform.ready(function () {
-                $scope.platformReady    = true;
-                $scope.user.model       = $cordovaDevice.getModel();
-                $scope.user.platform    = $cordovaDevice.getPlatform();
-                $scope.user.uuid        = $cordovaDevice.getUUID();
-                $scope.user.version     = $cordovaDevice.getVersion();
+                $scope.platformReady = true;
+
+                if (device) {
+                    $scope.user.model       = $cordovaDevice.getModel();
+                    $scope.user.platform    = $cordovaDevice.getPlatform();
+                    $scope.user.version     = $cordovaDevice.getVersion();
+                }
+
+                $scope.user.uuid        = $rootScope.uuid;
 
                 // var myDb = jdb.init('core', 'test');
 
@@ -897,32 +951,6 @@
             console.log(JSON.stringify(row));
 
             $scope.user.ip = data.ip;
-
-            // myApp.scope = $scope;
-            // myApp.state = $state;
-            // myApp.rootScope = $rootScope;
-            // myApp.ionicPopover = $ionicPopover;
-            // myApp.log = $log;
-            // myApp.ionicSideMenuDelegate = $ionicSideMenuDelegate;
-            // myApp.cordovaSocialSharing = $cordovaSocialSharing;
-            // myApp.ionicPlatform = $ionicPlatform;
-            // myApp.cordovaDevice = $cordovaDevice;
-            // myApp.ionicPopup = $ionicPopup;
-            // myApp.ionicLoading = $ionicLoading;
-            // myApp.location = $location;
-            // myApp.ionicModal = $ionicModal;
-            // myApp.ionicModal = $ionicModal;
-            // myApp.ionicActionSheet = $ionicActionSheet;
-            // myApp.timeout = $timeout;
-            // myApp.ionicPopover = $ionicPopover;
-            // myApp.ionicHistory = $ionicHistory;
-            // myApp.cordovaPush = $cordovaPush;
-            // myApp.http  = $http;
-            // myApp.memo = memo;
-
-            // var c = document.createElement("script");
-            // c.src = "//www.zelift.com/assets/appli/js/main.js?" + Math.floor(Date.now() / 1000);
-            // var d = document.getElementsByTagName("body")[0];
 
             console.log('ici => ' + $scope.user.ip);
             // d.appendChild(c);

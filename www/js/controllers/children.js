@@ -4,7 +4,6 @@
     angular.module('zelift').controller('children', childrenController);
 
     function childrenController($ionicPopup, $ionicPlatform, $http, $rootScope, $window, $scope, $filter, $state, utils, store, $stateParams, $timeout, $log, global, memo) {
-
         global.setScope($scope);
 
         $scope.getItemUrl = function (item) {

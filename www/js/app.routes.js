@@ -17,6 +17,19 @@
 
 	angular
 		.module('zelift')
+        .factory('UUID', function () {
+            self = this;
+
+            self.make = function () {
+                function s4() {
+                    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+                }
+
+                return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+            };
+
+            return self;
+        })
 		.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
             //** abstract route for sidemenu
             $stateProvider.state('zelift', {
