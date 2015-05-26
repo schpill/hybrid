@@ -206,6 +206,8 @@
                     };
                 }
 
+                console.log(pushNotification);
+
                 document.addEventListener("deviceready", function(){
                     $cordovaPush.register(configPush).then(function(result) {
                         console.log('ready for notif');
