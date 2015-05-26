@@ -180,111 +180,110 @@
                 }
             };
         })
-        .run(function ($window, $ionicPlatform, $ionicLoading, $rootScope, $http, $cordovaPush, $cordovaDialogs, $ionicPopup, $cordovaBadge, $timeout) {
-            $timeout(function() {
-                $ionicPlatform.ready(function () {
-                    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-                    // for form inputs).
-                    if (window.cordova && window.cordova.plugins) {
-                        if (window.cordova.plugins.Keyboard) {
-                            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-                        }
+        .run(function ($window, $ionicPlatform, $ionicLoading, $rootScope, $http, $cordovaPush, $cordovaDialogs, $ionicPopup, $cordovaBadge) {
+            $('#testinput').focus();
+            $ionicPlatform.ready(function () {
+                // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+                // for form inputs).
+                if (window.cordova && window.cordova.plugins) {
+                    if (window.cordova.plugins.Keyboard) {
+                        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
                     }
+                }
 
-                    if (window.StatusBar) {
-                        StatusBar.styleDefault();
-                    }
+                if (window.StatusBar) {
+                    StatusBar.styleDefault();
+                }
 
-                    if (ionic.Platform.isIOS()) {
-                        var configPush = {
-                            "badge": "true",
-                            "sound": "true",
-                            "alert": "true"
-                        };
-                    } else if (ionic.Platform.isAndroid()) {
-                        var configPush = {
-                            "senderID": "825494278935"
-                        };
-                    }
+                if (ionic.Platform.isIOS()) {
+                    var configPush = {
+                        "badge": "true",
+                        "sound": "true",
+                        "alert": "true"
+                    };
+                } else if (ionic.Platform.isAndroid()) {
+                    var configPush = {
+                        "senderID": "825494278935"
+                    };
+                }
 
-                    document.addEventListener("deviceready", function() {
-                        console.log('deviceready OK');
+                document.addEventListener("deviceready", function() {
+                    console.log('deviceready OK');
 
-                        $cordovaPush.register(configPush).then(function(result) {
-                            console.log('ready for notif');
-                        }, function(e) {
-                            console.log('not ready for notif');
-                            console.log(e);
-                        })
-                    });
-
-                    $rootScope.$on('$cordovaPush:notificationReceived', function(e, notification) {
-                        switch(notification.event) {
-                            case 'registered':
-                                if (notification.regid.length > 0) {
-                                    localStorage.setItem('regid', notification.regid);
-                                    console.log('regid => ' + notification.regid);
-                                } else {
-                                    console.log('regid NOK => ' + notification.regid);
-                                }
-
-                                break;
-                            case 'message':
-                                var title = 'ZeLift';
-                                var type = 'simple';
-                                var event = 'message';
-
-                                if (notification.payload.title) {
-                                    title = notification.payload.title;
-                                }
-
-                                if (notification.payload.type) {
-                                    type = notification.payload.type;
-                                }
-
-                                if (notification.payload.event) {
-                                    event = notification.payload.event;
-                                }
-
-                                if (event == 'message') {
-                                    $cordovaBadge.hasPermission().then(function() {
-                                        $cordovaBadge.get(function(currentCount) {
-                                            $cordovaBadge.set(currentCount + 1);
-                                        });
-                                    }, function() {
-                                        console.log('not allowed to set badge.');
-                                    });
-
-                                    var media = new Media("http://www.zelift.com/assets/sounds/beep.wav", function () {
-                                        console.log('media beep loaded');
-                                    }, function (e) {
-                                        console.log(e.message);
-                                    });
-
-                                    media.play();
-
-                                    if (type == 'simple') {
-                                        $cordovaDialogs.alert(notification.message, title);
-                                    } else if (type == 'rich') {
-                                        $ionicPopup.alert({
-                                            title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i> ' + title,
-                                            template: notification.message,
-                                            buttons: [{
-                                                text: 'OK',
-                                                type: 'button button-full button-zelift'
-                                            }]
-                                        });
-                                    }
-                                }
-
-                                break;
-                            default:
-                                alert('An unknown GCM event has occurred');
-                                break;
-                        }
-                    });
+                    $cordovaPush.register(configPush).then(function(result) {
+                        console.log('ready for notif');
+                    }, function(e) {
+                        console.log('not ready for notif');
+                        console.log(e);
+                    })
                 });
-            }, 300);
+
+                $rootScope.$on('$cordovaPush:notificationReceived', function(e, notification) {
+                    switch(notification.event) {
+                        case 'registered':
+                            if (notification.regid.length > 0) {
+                                localStorage.setItem('regid', notification.regid);
+                                console.log('regid => ' + notification.regid);
+                            } else {
+                                console.log('regid NOK => ' + notification.regid);
+                            }
+
+                            break;
+                        case 'message':
+                            var title = 'ZeLift';
+                            var type = 'simple';
+                            var event = 'message';
+
+                            if (notification.payload.title) {
+                                title = notification.payload.title;
+                            }
+
+                            if (notification.payload.type) {
+                                type = notification.payload.type;
+                            }
+
+                            if (notification.payload.event) {
+                                event = notification.payload.event;
+                            }
+
+                            if (event == 'message') {
+                                $cordovaBadge.hasPermission().then(function() {
+                                    $cordovaBadge.get(function(currentCount) {
+                                        $cordovaBadge.set(currentCount + 1);
+                                    });
+                                }, function() {
+                                    console.log('not allowed to set badge.');
+                                });
+
+                                var media = new Media("http://www.zelift.com/assets/sounds/beep.wav", function () {
+                                    console.log('media beep loaded');
+                                }, function (e) {
+                                    console.log(e.message);
+                                });
+
+                                media.play();
+
+                                if (type == 'simple') {
+                                    $cordovaDialogs.alert(notification.message, title);
+                                } else if (type == 'rich') {
+                                    $ionicPopup.alert({
+                                        title: '<i class="fa fa-exclamation-triangle fa-3x zeliftColor"><i> ' + title,
+                                        template: notification.message,
+                                        buttons: [{
+                                            text: 'OK',
+                                            type: 'button button-full button-zelift'
+                                        }]
+                                    });
+                                }
+                            }
+
+                            break;
+                        default:
+                            alert('An unknown GCM event has occurred');
+                            break;
+                    }
+                });
+            });
 
             $rootScope.ENV = 'development';
 
