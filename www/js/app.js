@@ -180,7 +180,7 @@
                 }
             };
         })
-        .run(function ($window, $ionicPlatform, $ionicLoading, $rootScope, $http, $cordovaPush, $cordovaDialogs, $ionicPopup, $cordovaBadge) {
+        .run(function ($window, $ionicPlatform, $ionicLoading, $rootScope, $http, $cordovaPush, $cordovaDialogs, $ionicPopup, $cordovaBadge, $timeout) {
             $timeout(function() {
                 $ionicPlatform.ready(function () {
                     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
