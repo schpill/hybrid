@@ -15,20 +15,9 @@
     "shelljs": "^0.3.0"
   },
   "cordovaPlugins": [
-    "org.apache.cordova.file",
-    "org.apache.cordova.inappbrowser",
-    "com.phonegap.plugins.PushPlugin",
-    "nl.x-services.plugins.socialsharing",
-    "org.apache.cordova.device",
-    "org.apache.cordova.console",
     "com.ionic.keyboard",
-    "org.apache.cordova.dialogs",
-    "org.apache.cordova.statusbar",
-    "org.apache.cordova.media",
     "com.phonegap.plugins.barcodescanner",
     "https://github.com/katzer/cordova-plugin-badge.git",
-    "org.apache.cordova.geolocation",
-    "org.apache.cordova.splashscreen",
     "https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
     "https://github.com/phonegap-build/PushPlugin.git",
     "https://github.com/VitaliiBlagodir/cordova-plugin-datepicker",
@@ -49,12 +38,21 @@
     "cordova-plugin-console",
     "cordova-plugin-statusbar",
     "cordova-plugin-dialogs",
+    "cordova-plugin-vibration",
     "cordova-plugin-media",
     {
       "locator": "https://github.com/katzer/cordova-plugin-badge.git",
       "id": "de.appplant.cordova.plugin.badge"
     },
-    "cordova-plugin-geolocation"
+    "cordova-plugin-geolocation",
+    {
+      "locator": "https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
+      "id": "nl.x-services.plugins.socialsharing"
+    },
+    {
+      "locator": "https://github.com/phonegap-build/PushPlugin.git",
+      "id": "com.phonegap.plugins.PushPlugin"
+    }
   ],
   "cordovaPlatforms": [
     "android"
