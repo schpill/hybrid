@@ -206,9 +206,9 @@
                     };
                 }
 
-                console.log(window.plugins.pushNotification);
+                document.addEventListener("deviceready", function() {
+                    console.log('deviceready OK');
 
-                document.addEventListener("deviceready", function(){
                     $cordovaPush.register(configPush).then(function(result) {
                         console.log('ready for notif');
                     }, function(e) {
