@@ -287,7 +287,7 @@
                 $window.localStorage.setItem(key, value);
             },
 
-            get: function(key) {
+            get: function(key, defaultValue) {
                 defaultValue = typeof defaultValue == 'undefined' ? null : defaultValue;
 
                 var val = $window.localStorage.getItem(key);
