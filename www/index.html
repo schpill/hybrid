@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
         <title>ZeLift</title>
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none' 'self' http://fonts.googleapis.com http://fonts.gstatic.com http://www.zelift.com http://zelift.com https://www.zelift.com https://zelift.com http://www.google.com; connect-src 'self' http://www.zelift.com http://zelift.com https://www.zelift.com https://zelift.com; script-src 'self' https://maps.googleapis.com/ https://maps.gstatic.com/ https://mts0.googleapis.com/ http://zelift.com http://www.zelift.com http://www.google.com 'unsafe-inline' 'unsafe-eval'; img-src 'self' http://placehold.it http://zelift.com http://www.zelift.com http://www.google.com; style-src 'self' 'unsafe-inline' http://fonts.googleapis.com; font-src: 'self' http://fonts.gstatic.com; link-href 'self' http://fonts.googleapis.com http://www.google.com">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none' 'self' http://fonts.googleapis.com http://fonts.gstatic.com http://www.zelift.com http://zelift.com https://www.zelift.com https://zelift.com http://www.google.com *; connect-src 'self' http://www.zelift.com http://zelift.com https://www.zelift.com https://zelift.com *; script-src 'self' https://maps.googleapis.com/ https://maps.gstatic.com/ https://mts0.googleapis.com/ http://zelift.com http://www.zelift.com http://www.google.com 'unsafe-inline' 'unsafe-eval' *; img-src 'self' http://placehold.it http://zelift.com http://www.zelift.com http://www.google.com *; style-src 'self' 'unsafe-inline' http://fonts.googleapis.com; font-src: 'self' http://fonts.gstatic.com *; link-href 'self' http://fonts.googleapis.com http://www.google.com *">
 
         <!-- Stylesheets -->
         <link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -14,8 +14,8 @@
         <link href="css/md.css" rel="stylesheet">
         <!-- <link href="//www.zelift.com/assets/appli/css/main.css" rel="stylesheet"> -->
 
-        <script src="lib/requirejs/require.js"></script>
-        <script src="lib/jQuery/dist/jquery.js"></script>
+        <!-- <script src="lib/requirejs/require.js"></script> -->
+        <!-- <script src="lib/jquery/dist/jquery.min.js"></script> -->
         <script src="lib/ionic/js/ionic.bundle.js"></script>
         <script src="lib/ngCordova/dist/ng-cordova.js"></script>
         <script src="cordova.js"></script>
@@ -39,29 +39,29 @@
         <script src="js/app.js"></script>
         <script src="js/lib/memo.js"></script>
         <script src="js/lib/fs.js"></script>
-        <script src="js/lib/openfb.js"></script>
-        <script src="js/lib/utils.js"></script>
-        <script src="js/lib/store.js"></script>
-        <script src="js/lib/cache.js"></script>
-        <script src="js/app.routes.js"></script>
-        <script src="js/controllers/sidemenu.js"></script>
-        <script src="js/controllers/home.js"></script>
-        <script src="js/controllers/search.js"></script>
-        <script src="js/controllers/map.js"></script>
-        <script src="js/controllers/services.js"></script>
-        <script src="js/controllers/children.js"></script>
-        <script src="js/controllers/offrein.js"></script>
-        <script src="js/controllers/myoffers.js"></script>
-        <script src="js/controllers/offreout.js"></script>
-        <script src="js/controllers/about.js"></script>
-        <script src="js/controllers/account.js"></script>
-        <script src="js/controllers/myzelift.js"></script>
-        <script src="js/controllers/settings.js"></script>
-        <script src="js/controllers/localize.js"></script>
+        <!-- <script src="js/lib/openfb.js"></script> -->
+        <!-- <script src="js/lib/utils.js"></script> -->
+        <!-- <script src="js/lib/store.js"></script> -->
+        <!-- <script src="js/lib/cache.js"></script> -->
+        <!-- <script src="js/app.routes.js"></script> -->
+        <!-- <script src="js/controllers/sidemenu.js"></script> -->
+        <!-- <script src="js/controllers/home.js"></script> -->
+        <!-- <script src="js/controllers/search.js"></script> -->
+        <!-- <script src="js/controllers/map.js"></script> -->
+        <!-- <script src="js/controllers/services.js"></script> -->
+        <!-- <script src="js/controllers/children.js"></script> -->
+        <!-- <script src="js/controllers/offrein.js"></script> -->
+        <!-- <script src="js/controllers/myoffers.js"></script> -->
+        <!-- <script src="js/controllers/offreout.js"></script> -->
+        <!-- <script src="js/controllers/about.js"></script> -->
+        <!-- <script src="js/controllers/account.js"></script> -->
+        <!-- <script src="js/controllers/myzelift.js"></script> -->
+        <!-- <script src="js/controllers/settings.js"></script> -->
+        <!-- <script src="js/controllers/localize.js"></script> -->
 
         <!-- google maps javascript -->
-        <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es&sensor=true"></script>
-        <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<!--         <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es&sensor=true"></script>
+        <script type="text/javascript" src="http://www.google.com/jsapi"></script> -->
     </head>
     <body ng-app="zelift">
         <script type="text/javascript" charset="utf-8">

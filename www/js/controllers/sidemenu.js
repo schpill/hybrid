@@ -356,10 +356,6 @@
 
         console.log(uuid);
 
-        document.addEventListener("deviceready", function() {
-            console.log('ca passe');
-        });
-
         if (window.cordova) {
             $ionicPlatform.ready(function () {
                 $scope.platformReady = true;
